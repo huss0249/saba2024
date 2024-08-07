@@ -1,5 +1,5 @@
 div {
   background: #ccc;
-  color: blue;
+  color: blue!important;
   font-size: 64rem;
 }
