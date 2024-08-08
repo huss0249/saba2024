@@ -228,6 +228,7 @@ window.tdd = {
 
           // Checking back to title cover page preset
           JSON.parse(Var_titleCover.getValue()) === 1 ? tdd.titleCover = true : ''
+          // log(JSON.parse(Var_titleCover.getValue()), ' ', "titleCover = ", tdd.titleCover)
 
           // Checking DLN player preset
           JSON.parse(Var_player.getValue()) === 1 ? tdd.player = true : ''
@@ -257,6 +258,8 @@ window.tdd = {
       tdd.menu_pos = JSON.parse(Var_menu_pos.getValue());
       tdd.menu_width = JSON.parse(Var_menu_width.getValue());
       tdd.custom_title = tdd.App.checkLocalData("start");
+
+      // log("jumbo => ", tdd.jumbo, " | menu pos => ", tdd.menu_pos);
 
       tdd.toc.init_toc();
 
@@ -328,8 +331,11 @@ window.tdd = {
     checkLocalData(status) {
       // 20231122
       let currentData = tdd.App.getLocalData(tdd.courseCode)
+      log("HERE > currentData => ", currentData)
+
       tdd.custom_title = tdd.App.getLocalData(tdd.courseCode)
-      
+      log("HERE > tdd.custom_title => ", tdd.custom_title)
+
       return tdd.custom_title
     },
 
@@ -359,6 +365,8 @@ window.tdd = {
 
     // check to auto redirect
     redirect_check() {
+      log('20240423 tdd.nextPage = ', tdd.nextPage)
+      log("@ redirect > tdd.custom_title => ", tdd.custom_title)
 
       let redirect_check_passed = false;
 
@@ -372,6 +380,8 @@ window.tdd = {
 
     // language selection on cover page
     lang_selection(flag, page) {
+      log("targetPageLink as a flag in lan selection => ", flag);
+      log("current language in lan selection => ", currentLanguage);
       // // trivExitPage(flag, true)
       // trivExitPage(page, true)
       //REPLACED BY MODAL FUNCTIONALITY
@@ -381,7 +391,15 @@ window.tdd = {
     //5 ✅ try clicked link
     // link_selected: function (e) {
     link_selected(e) {
-      
+      // log('')
+      // log('')
+      log("title Page ", tdd.title_page);
+
+      log("select language check event => ", e);
+      log("select language check => ", e.target);
+      log("First Page of Lang => ", e.target.dataset["title"]);
+      log("select language check => ", e.target.dataset["lang"]);
+      log("currentLanguage = ", currentLanguage);
 
       let targetPageLink = e.target.dataset[`${currentLanguage}`];
       // log('FROM APP targetPageLink = > ', targetPageLink)
@@ -403,7 +421,7 @@ window.tdd = {
     nav_btn_selected(e) {
 
       let titleCoverLink = tdd.toc_list.filter((el) => el.type === "title")[0].title_link;
-     
+      log("titleCoverLink ==== ", titleCoverLink)
 
       let titlePages = tdd.toc_list.filter((el) => el.type === "page");
       titlePages.indexOf(tdd.activePage) === 0 ? log("@ nav btn selected >> FirstPage >> titlePages => ", titlePages) : ''
@@ -412,17 +430,22 @@ window.tdd = {
       let items = $toc.querySelectorAll("a")
 
       console.group()
+      // log('@ nav btn selected')
+      // log('items = ', items)
 
       // Click was bubbling to icon
       // let $btnSelected = e.target.id
       let $btnSelected = e.target.closest(":not(i)").id
 
+      // log('e = ', e)
+      // log('e target = ', e.target)
+      log('btn selected = ', $btnSelected)
 
       for (let [x, item] of items.entries()) {
         let pageGlobalPosition = parseInt(item.dataset[`${"global"}`]);
 
         if (pageGlobalPosition === tdd.activeGlobal) {
-      
+          log('HERE > pageGlobalPosition = ', pageGlobalPosition)
 
           /*
           $btnSelected === "btnPrev"
@@ -444,7 +467,7 @@ window.tdd = {
           if ($btnSelected === "btnPrev" && pageGlobalPosition === 1 && tdd.titleCover) {
             // tdd.custom_title.home = false;
             tdd.custom_title.home = true;
-           
+            log('tdd.custom_title.home = ', tdd.custom_title.home)           
             tdd.App.setLocalData(tdd.courseCode, tdd.custom_title)
             targetNavLink = titleCoverLink
           }
@@ -673,7 +696,7 @@ window.tdd = {
           });
         });
       }
-    
+      log('m2mClassList ACCESSED')
       return
     },
 
