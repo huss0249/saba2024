@@ -54,6 +54,16 @@
   --bs-dark: #212529 !important;
 }
 
+.active {
+  /* background: #545b62 !important;
+  border-color: #4e555b !important; */
+  /* background: #cccccc !important;
+  border-color: #cccccc !important; */
+  background: var(--bs-list-group-action-hover-bg) !important;
+  border-color: var(--bs-list-group-action-hover-bg) !important;
+  color: unset !important;
+}
+
 .app-version {
 
 }
