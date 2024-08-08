@@ -1,0 +1,109 @@
+<template>
+<div id="notes">
+    <div id="rpp1m1note1">
+        <div class="note-title">Note</div>
+        <p>The RPP does not cover breathing air systems for:</p>
+        <ul>
+            <li>diving</li>
+            <li>aircraft safety/emergency oxygen</li>
+            <li>medical respirators (inhalators/ventilators and resuscitators)</li>
+            <li>chemical, biological, radiological, nuclear (CBRN) agents</li>
+        </ul>
+    </div>
+    <!--  -->
+    <div id="rpp1m1note2">
+        <div class="note-title">Note</div>
+        <p>Some links in this course are only available on the DND network (DWAN).</p>
+        <p>All resources mentioned in the course can be accessed from the <strong>Resources</strong> icon at the top of the page.</p>
+    </div>
+    <!--  -->
+    <div id="rpp1m2note1">
+        <div class="note-title">Note for Managers and Supervisors</div>
+        <p>If there are differences between standards, you must follow the one that is the most stringent and safe. Consult with the General Safety Officer, Preventive Medicine Technician (P Med Tech), RPPA or RPPC if you are not sure which standard to follow in a given situation.</p>
+    </div>
+    <!--  -->
+    <div id="rpp1m2note2">
+        <div class="note-title">Note</div>
+        <p>For the purpose of the RPP, Part II of the CLC and the accompanying Canada Occupational Health and Safety Regulations (COHSRs) apply legally to public service employees. These regulations also apply legally to military personnel who supervise public service employees, and as a matter of CAF order to safeguard the health and safety of CAF personnel.</p>
+        <p>In military operational contexts, the legislation and regulations adopted as an order to protect the CAF may not apply if there is a justifiable operational reason why applying the legislation is not possible.</p>
+        <p>Reasons not to apply the RPP to military personnel are limited to hand-to-hand combat or risk of failure of a mission. Domestically, there aren’t likely to be many justifiable operational reasons that would be acceptable as a deviation from the RPP.</p>
+    </div>
+    <!--  -->
+    <div id="rpp1m2note3">
+        <div class="note-title">Note for Managers and Supervisors</div>
+        <p>You may need training on the listed CGSB/CSA standards to be fully aware of your responsibilities as a manager or supervisor. This falls under additional training (Step 4 on the list of training requirements at the beginning of this course).</p>
+    </div>
+    <!--  -->
+    <div id="rpp1m2note4">
+        <div class="note-title">Note</div>
+        <p>Some RPPAs are also fit testers, but not all fit testers are RPPAs. Most RPPAs are Fire Chiefs or Chief Fire Inspectors, and most fit testers are firefighters or RPPCs. Fire Chiefs have so many duties in addition to managing staff at a fire hall that they don’t typically do fit testing or air quality testing.</p>
+    </div>
+    <!--  -->
+    <div id="rpp1m3note1">
+        <div class="note-title">Note for Managers and Supervisors</div>
+        <p>Understanding the human respiratory system and hazards will help you in discussing the importance of safe RPP practices with your staff.</p>
+    </div>
+    <!--  -->
+    <div id="rpp1m3note2">
+        <div class="note-title">Note</div>
+        <p>Working atmospheres that are too rich in oxygen are also unsafe, although such atmospheres occur less commonly.</p>
+    </div>
+    <!--  -->
+    <div id="rpp1m3note3">
+        <div class="note-title">Note</div>
+        <p>All four types of hazardous atmospheres can be considered immediately dangerous to life or health (IDLH). An IDLH atmosphere is an atmosphere that is likely to:</p>
+        <ul>
+            <li>cause death, or</li>
+            <li>cause immediate or delayed permanent adverse health effects, or</li>
+            <li>prevent or impair an individual’s ability to escape the atmosphere</li>
+        </ul>
+        <p>An IDLH atmosphere occurs when IDLH limits for airborne contaminants are exceeded or when the atmosphere is oxygen-deficient.</p>
+    
+    </div>
+    <!--  -->
+</div>
+<!-- ============================================================================================================================================== -->
+<div id="tips">
+    <div id="rpp1m2tip1">
+        <div class="tip-title">Tip</div>
+        <p>Throughout the rest of this course, you will see a <strong>Legislation, Regulations, Standards, Directives and Orders</strong> button that you can select to access references applicable to the topic.</p>
+    </div>
+    <!--  -->
+    <div id="rpp1m2tip2">
+        <div class="tip-title">Tip</div>
+        <p>Feeling overwhelmed with information? Consider creating an “RPP” folder under “Favourites” in your internet browser.</p>
+        <p>Any time you look up something RPP-related, save it in your Favourites for future reference.</p>
+    </div>
+    <!--  -->
+</div>
+<!-- ============================================================================================================================================== -->
+<div id="resources">
+    <div id="rpp1m2res1">
+        <div class="res-title">Legislation, Regulations, Standards, Directives and Orders</div>
+        <p>For more information on roles and responsibilities, consult the following resources:</p>
+        <ul>
+            <li>CSA Z94.4 Selection, Use, and Care of Respirators: Article 5, Roles and Responsibilities</li>
+            <li>DND RPP: Part 1, Program and Responsibilities</li>
+            <li>DAOD 5021-1, Respiratory Protection, Section 5, Responsibilities</li>
+        </ul>
+    </div>
+    <!--  -->
+    <div id="rpp1m3res1">
+        <div class="res-title">Legislation, Regulations, Standards, Directives and Orders</div>
+        <p>For a more scientific explanation of hypoxia and a description of the effects of oxygen deficiency at different levels, consult the following resource:</p>
+        <ul>
+            <li>DND RPP: Annex A2, Hypoxia</li>
+        </ul>
+    </div>
+    <!--  -->
+    <div id="rpp1m3res2">
+        <div class="res-title">Legislation, Regulations, Standards, Directives and Orders</div>
+        <p>For more information on respiratory hazards, consult the following resources:</p>
+        <ul>
+            <li>CSA Z94.4 Selection, Use, and Care of Respirators: Article 6, Hazard and Risk Assessment</li>
+            <li>DND RPP: Part 2, Respiratory Hazards</li>
+        </ul>
+    </div>
+    <!--  -->
+</div>
+</template>
