@@ -1,1 +1,3368 @@
+/* 
+document.querySelector('template').content.cloneNode(true).children
+*/
 
+/*  IMPORTS ------------------------------------------- */
+
+/*  ------------------------------------------- */
+
+
+const $appVersion = '20240506_v01';
+
+
+/**
+
+* 
+ ⛳ // STOPPED HERE [PUT DATE]
+*
+ 
+ /*
+1.	Resources
+2.	Definitions
+3.	Abbreviations
+4.	Placeholder A
+5.	Placeholder B
+
+
+
+
+
+
+*/
+
+
+
+
+// ✅
+
+/* 
+✅✔️🟥🟩🔵🔷👍✍️
+😀😶😎😥🥱😤😨🥵😡🥳
+😎😃✔👀🎁🎉🐱‍🏍✨👌👍
+💀🤓👻💩👽☠
+🐱‍🐉🦝🦊🦒🐔🐪
+👀👍👎👏🤝👌👉👈
+🎨🎁⚽🏀🎱🎯🥇🥈🥉🏆
+♦♥♟🔔📢🔒🔑🔓⚙
+📑📒📙📗📘📕📔📖
+🖌📝✏✒📆📈📌📍📎📐✂🗄
+⏰⏱⌚🗑⌛
+🍕🍔🍟🍿🥗🍤🥧🍦🍪🍧🍩🍨🧁🍬🍮🍭☕🍽
+🍇🍉🍊🍋🥭🍍🍎🍓🧅🧄
+⚙🔧🛠📌📍📎✂💼
+*/
+
+/*
+----------------------------------------------------
+NOTES
+----------------------------------------------------
+*/
+
+/** =====================================================
+    TDD RESPONSIVE TEMPLATE FOR SABA PUBLISHER SCORM PACKAGES:
+    =====================================================
+    0.  Define Reusable ROOT objects
+    1.	GLOBAL VARIABLES
+    2.	GLOBAL OBJECT
+    3.	PRELOADER
+    4.	LOADER Listener
+    5.	GLOBAL LISTENER ( < == APP starts from HERE 📍  ==  >  )
+*/
+
+//0 ✅
+window.log = console.log;
+window.warn = console.warn;
+window.error = console.error;
+window.table = console.table;
+
+//1
+window.$body = document.body;
+$body.removeAttribute("onfocus");
+$body.removeAttribute("onresize");
+// $body.classList.add('m-0', 'p-0', 'd-flex', 'flex-column', 'justify-content-stretch', 'align-items-center')
+$body.classList.add('m-0', 'p-0', 'd-flex', 'flex-column', 'justify-content-stretch', 'align-items-center', 'hidden')
+
+/*
+$body.onload = function(){
+    let getStyle = $body.getElementsByTagName("style")
+    getStyle[0].remove()
+    // let getScript = $body.getElementsByTagName("script");
+    // getScript[0].remove()
+}
+*/
+
+window.$pageDiv = document.getElementById("pageDIV");
+// $pageDiv[0].removeAttribute('style')
+const $src = $body.querySelector('[title="refTOC"]');
+
+$src.classList.add("d-none", "d-print-none")
+window.$toc = "";
+
+// window.lang = "";
+window.currentLanguage = "";
+// window.currentMode = "dark"
+
+window.$modal = "";
+window.$modal_extract = {};
+window.$modal_parts = {};
+window.dialog_data = {};
+window.$modal_data = {};
+
+window.myArr = [];
+
+window.mode_colors = {
+  light: { first: '', second: '', third: '', base: '' },
+  dark: { first: '', second: '', third: '', base: '' },
+};
+
+//-----------------------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------------------
+
+/** 🟥 📐 //  2. Global Object  ============================= */
+window.tdd = {
+  /** =============================================================
+    Create Global container object:
+    =====================================================
+    1.  Define variables
+    2.  Define empty objects
+    3.  Define DICTIONARY
+    4.  Define App object
+    5.  Define LIB object
+    6.  Define UI object
+    7.  Define TOC object
+  */
+
+  tmpAttArr: [],
+  tmpAttObj: [],
+
+  /*
+  ===================================== SAMPLE
+  tdd.tmpAttArr = [element]
+  tdd.tmpAttObj = {
+    "att": att val,
+    "att": att val
+  }
+  tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+  // tdd.tmpAttArr = []
+  // tdd.tmpAttObj = {}
+  tdd.lib.reset_loop_setAtts()
+  ===================================== END SAMPLE
+  */
+
+  /** --------------------------
+   Conditional features
+   ......................... */
+  custom_title: {},
+  custom_modules: [],
+  menu_pos: "",
+  jumbo: "",
+  player: false,
+
+  //for the dialog
+  title_page: false,
+
+  // for returning the the cover page
+  titleCover: false,
+
+  // localData: false,
+  // courseCode: '',
+  courseCode: $src[0].textContent,
+  activeLink: "",
+  activePage: "",
+  activeGlobal: "",
+  nextPage: "",
+
+  typeSetup: {
+    body: { size: '', color: '' },
+    h6: { size: '', color: '' },
+    h5: { size: '', color: '' },
+    h4: { size: '', color: '' },
+    h3: { size: '', color: '' },
+    h2: { size: '', color: '' },
+    h1: { size: '', color: '' },
+  },
+  /** --------------------------
+   ......................... */
+  ready: {},
+  course: {},
+  $ui: {},
+  dictionary: window.dictionary,
+  titleImages: window.titleImages,
+
+  //--------------------------------------------------------------------------------------
+  /** 🟥 4 🟥 Main App object  ============================= */
+  App: {
+    /** =====================================================
+      Create APP:
+      =====================================================
+      1.  Init App => ⏰  OBSERVER
+      3.  Read from Loacl Storage
+      2.  Write to local Storage
+      4.  Add generated TOC LIST to DOM element generated by UI
+      5.  Execute a GLOBAL click event from a page button
+    */
+
+    //1
+    init_app() {
+      tdd.App.init_observer()
+    },
+
+    init_observer() {
+      /*
+      language observer
+        1- Get the language variable from publisher
+        2- Start calling the next steps
+      ------------------------------------------
+      */
+
+      //⏰
+      const observer = new MutationObserver(() => {
+        if (Var_lang.getValue()) {
+          currentLanguage = Var_lang.getValue();
+
+          // preset the checker variables
+          tdd.ready.js = false;
+          tdd.ready.toc = false;
+          tdd.ready.ui = false;
+
+          // Checking back to title cover page preset
+          JSON.parse(Var_titleCover.getValue()) === 1 ? tdd.titleCover = true : ''
+
+          // Checking DLN player preset
+          JSON.parse(Var_player.getValue()) === 1 ? tdd.player = true : ''
+
+          observer.disconnect();
+          tdd.App.start_app();
+        }
+      });
+
+      // These are observer related elements
+      const target = $body;
+      const config = { childList: true };
+      observer.observe(target, config);
+      // return
+    },
+
+
+    start_app() {
+      // hide preloader
+      // tdd.$preloader.classList.add("preloader-hidden")
+
+      tdd.custom_cover = JSON.parse(Var_custom_cover.getValue());
+      tdd.custom_modules = JSON.parse(Var_modules.getValue());
+
+      log('custom cover | custom modules => ', tdd.custom_cover, ' | ', tdd.custom_modules)
+      tdd.jumbo = JSON.parse(Var_jumbo.getValue());
+      tdd.menu_pos = JSON.parse(Var_menu_pos.getValue());
+      tdd.menu_width = JSON.parse(Var_menu_width.getValue());
+      tdd.custom_title = tdd.App.checkLocalData("start");
+
+      tdd.toc.init_toc();
+
+      tdd.toc_list.indexOf(tdd.activePage) === 0
+        ? tdd.ui.init_cover()
+        : tdd.ui.init_page(tdd.activePage)
+    },
+
+
+    //2 Write to local Storage
+    setLocalData(flag, obj) {
+      localStorage.setItem(flag, JSON.stringify(obj));
+      return;
+    },
+
+    //3 Read from local Storage
+    getLocalData(flag) {
+      let read_data = {};
+      if (localStorage[flag]) {
+        read_data = JSON.parse(localStorage.getItem([flag]));
+
+        tdd.custom_title.lang = read_data.lang;
+        // read_data.lang != 'title' ? tdd.custom_title.lang = read_data.lang : error('Language Setting Issue Found!')
+
+        tdd.custom_title.linear = read_data.linear;
+        tdd.custom_title.list = [...read_data.list];
+
+        tdd.custom_title.modules = [...read_data.modules];
+        // read_data.modules === tdd.custom_modules ? tdd.custom_title.modules = [...read_data.modules] : error('Custom Modules Mismatch Found!')
+        tdd.custom_title.skip = read_data.skip;
+
+        tdd.custom_title.home = read_data.home;
+        tdd.custom_title.prev = read_data.prev;
+
+        tdd.toc_list = [...tdd.custom_title.list];
+      } else {
+        warn("NO LOCAL DATA FOUND...");
+
+        tdd.custom_title.lang = currentLanguage;
+
+        //check custom modules to set
+
+        // tdd.custom_title.linear = false
+        tdd.custom_modules[0] === 0
+          ? (tdd.custom_title.linear = true)
+          : (tdd.custom_title.linear = false)
+
+        tdd.custom_title.list = []
+        tdd.custom_title.modules = [...tdd.custom_modules]
+
+        // [default is true]
+        tdd.custom_title.home = true
+
+        // [default is 0]
+        tdd.custom_title.prev = 0
+
+        // [default is true] will set in the next cover check
+        tdd.custom_title.skip = true
+        // tdd.toc_list = currentData.list
+
+        tdd.App.setLocalData(tdd.courseCode, tdd.custom_title)
+      }
+      // added 20231121 AHMED
+      // tdd.custom_title.home = true
+
+      return tdd.custom_title
+    },
+
+    checkLocalData(status) {
+      // 20231122
+      let currentData = tdd.App.getLocalData(tdd.courseCode)
+      tdd.custom_title = tdd.App.getLocalData(tdd.courseCode)
+      
+      return tdd.custom_title
+    },
+
+    //4 Add generated TOC list to DOM element generated by UI
+    process_data(rendered_toc) {
+      // This is waiting for UI to be generated then to render the accordion TOC in its parent
+      if (!tdd.ready.ui) {
+        error("WAITING FOR UI")
+        //Do Something While Waiting / Spinner Gif etc.
+      } else {
+        warn("@ Process Date => Rendered TOC and Language = ", [
+          "rendered_toc",
+          rendered_toc,
+          "currentLanguage",
+          currentLanguage,
+        ])
+        if (rendered_toc === "title" && currentLanguage === "title") {
+          tdd.$preloader.classList.add("preloader-hidden")
+        } else {
+          //temporary location
+          warn("@ Process Date => active page = ", tdd.activePage)
+          tdd.ui.init_ui()
+        }
+        tdd.$preloader.classList.add("preloader-hidden")
+      }
+    },
+
+    // check to auto redirect
+    redirect_check() {
+
+      let redirect_check_passed = false;
+
+      tdd.custom_title.lang != "title" &&
+        !tdd.custom_title.home &&
+        tdd.custom_title.prev != 0 ?
+        redirect_check_passed = true : ""
+
+      return redirect_check_passed
+    },
+
+    // language selection on cover page
+    lang_selection(flag, page) {
+      // // trivExitPage(flag, true)
+      // trivExitPage(page, true)
+      //REPLACED BY MODAL FUNCTIONALITY
+      // tdd.ui.init_custom_popup(flag, page)
+    },
+
+    //5 ✅ try clicked link
+    // link_selected: function (e) {
+    link_selected(e) {
+      
+
+      let targetPageLink = e.target.dataset[`${currentLanguage}`];
+      // log('FROM APP targetPageLink = > ', targetPageLink)
+
+      // trivExitPage(targetPageLink, true)
+
+      !tdd.title_page
+        ? trivExitPage(targetPageLink, true)
+        : tdd.App.lang_selection(
+          e.target.dataset["lang"],
+          e.target.dataset["title"]
+        );
+
+      return;
+    },
+
+    //6 ✅ Handle the click from nav btns while in custom title
+    // nav_btn_selected: function (e) {
+    nav_btn_selected(e) {
+
+      let titleCoverLink = tdd.toc_list.filter((el) => el.type === "title")[0].title_link;
+     
+
+      let titlePages = tdd.toc_list.filter((el) => el.type === "page");
+      titlePages.indexOf(tdd.activePage) === 0 ? log("@ nav btn selected >> FirstPage >> titlePages => ", titlePages) : ''
+
+      let targetNavLink = ""
+      let items = $toc.querySelectorAll("a")
+
+      console.group()
+
+      // Click was bubbling to icon
+      // let $btnSelected = e.target.id
+      let $btnSelected = e.target.closest(":not(i)").id
+
+
+      for (let [x, item] of items.entries()) {
+        let pageGlobalPosition = parseInt(item.dataset[`${"global"}`]);
+
+        if (pageGlobalPosition === tdd.activeGlobal) {
+      
+
+          /*
+          $btnSelected === "btnPrev"
+          ? (targetNavLink = items[x - 1].dataset[`${currentLanguage}`])
+          : ""
+          */
+
+          // 20231122
+          $btnSelected === "btnPrev" && pageGlobalPosition > 1
+            ? (targetNavLink = items[x - 1].dataset[`${currentLanguage}`])
+            : ""
+
+          /*
+          $btnSelected === "btnPrev" && pageGlobalPosition === 1 && tdd.titleCover
+          ?  targetNavLink = titleCoverLink
+          : ""
+          */
+
+          if ($btnSelected === "btnPrev" && pageGlobalPosition === 1 && tdd.titleCover) {
+            // tdd.custom_title.home = false;
+            tdd.custom_title.home = true;
+           
+            tdd.App.setLocalData(tdd.courseCode, tdd.custom_title)
+            targetNavLink = titleCoverLink
+          }
+
+          $btnSelected === "btnNext"
+            ? (targetNavLink = items[x + 1].dataset[`${currentLanguage}`])
+            : ""         
+        }
+        // next page link
+        trivExitPage(targetNavLink, true)
+      }
+
+      console.groupEnd()
+    },
+
+
+
+    remove_saba_styles() {
+      let saba_styles = document.querySelectorAll("style");
+      saba_styles.forEach((el) => {
+        el.remove();
+      });
+
+
+      let saba_links = document.querySelectorAll("link");
+      saba_links.forEach((elem) => {
+        elem.href.includes("trivantis") ? elem.remove() : "";
+      });
+      return
+    },
+  },
+
+  //--------------------------------------------------------------------------------------
+
+  /** 🟥  Reusable methods library   ======================== */
+  lib: {
+
+
+    // includeHTML(cb) {
+    includeHTML() {
+      console.log("includeHTML called")
+      let z, i, elmnt, file, xhttp;
+      z = document.getElementsByTagName("*");
+      for (i = 0; i < z.length; i++) {
+        elmnt = z[i];
+        file = elmnt.getAttribute("tdd-include-html");
+        if (file) {
+          xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4) {
+              if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+              if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+              elmnt.removeAttribute("tdd-include-html");
+              // tdd.lib.includeHTML(cb);
+            }
+          }      
+          xhttp.open("GET", file, true);
+          xhttp.send();
+          return;
+        }
+      }
+      // if (cb) cb();
+      // (cb) ? window[cb()] : ''
+
+      // if (typeof cb === 'function') {
+      // if (cb.constructor === 'function') {
+      //   console.log('is function')
+      //   cb.call()
+      // } else {
+      //   console.log("cb is not a function => ", cb)
+      // }
+
+      // if (typeof window[this.cb] === 'function') {
+      //   console.log('is function')
+      //   // cb.call()
+      //   window[cb()]
+      // } else {
+      //   console.log("cb is not a function => ", cb)
+      // }
+    },
+
+    findAncestor(el, cls) {
+      log("findAncestor => ", el, cls);
+      while ((el = el.parentElement) && !el.classList.contains(cls));
+      return el;
+    },
+
+
+    // This will format singular digit to string => 1 > 01
+    pad(d) {
+      return d < 10 ? "0" + d.toString() : d.toString();
+    },
+
+
+    /**
+     * Simulate a click event.
+     * @public
+     * @param {Element} elem  the element to simulate a click on
+     */
+    simulateClick(elem) {
+      // Create our event (with options)
+      let evt = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      })
+      // If cancelled, don't dispatch our event
+      let canceled = !elem.dispatchEvent(evt);
+    },
+
+    // Set span class
+    set_span_class(el, className) {
+      // log('passed data = ', el, className)
+      el.className = ""
+      el.classList.add(className)
+    },
+
+    // Get the opposite sibling of an object in a nested object
+    getTwin(ref, nestedObj) {
+      let tmp = ""
+      for (el in nestedObj) if (el != ref) tmp = nestedObj[el]
+      return tmp
+    },
+
+    // Get nested object list
+    getNestedArr(ref, nestedObj, flag) {
+      let tmpArr = []
+      if (flag) {
+        for (el in nestedObj) tmpArr.push(nestedObj[el][ref])
+      } else {
+        for (el in nestedObj) tmpArr.push(el)
+      }
+      return tmpArr
+    },
+
+    // Get clicked nav options button link
+    getClickedOption(ref, nestedObj, flag) {
+      let tmp = ""
+      for (el in nestedObj) if (el === ref) tmp = nestedObj[el]
+      return tmp
+    },
+
+    // Filter By Item Type
+    filter_itemType(arr, val) {
+      let filterArr = []
+      for (let i = 0; i < arr.length; i++)
+        if (arr[i].type === val) filterArr.push(i)
+      return filterArr
+    },
+
+    // Filter By popup page name | INPUT:	Array and filter value | RETURN: Filtered array including filtered indexes
+    filter_itemName(arr, val) {
+      let filterArr = {}
+      for (let i = 0; i < arr.length; i++)
+        if (arr[i].name.toLowerCase() === val.toLowerCase()) filterArr = arr[i]
+      return filterArr
+    },
+
+    // Append multiple children to 1 Parent | INPUT: Array and target element | RETURN:	updated > target element
+    append_multiple(arr, targetElement) {
+      arr.forEach((i) => targetElement.appendChild(i));
+    },
+
+    //======================================================
+    loop_setAtts(elArr, attObj) {
+      elArr.forEach((el) => {
+        for (const att in attObj) {
+          el.setAttribute(att, attObj[att])
+          // console.log(`${att}: ${attObj[att]}`);
+        }
+      })
+      // log('loop_setAtts for => ', elArr)
+      return
+    },
+
+    reset_loop_setAtts() {
+      tdd.tmpAttArr = []
+      tdd.tmpAttObj = {}
+      return
+    },
+    //======================================================
+
+    set_Attribute_multiple(
+      attr,
+      parameter,
+      arr,
+      arr2,
+      strToRemove,
+      strToPlace
+    ) {
+      for (let i = 0; i < arr2.length; i++) {
+        let newValue = arr2[i].replace(strToRemove, strToPlace)
+        if (attr) {
+          arr[i].setAttribute(parameter, newValue)
+        } else {
+          arr[i][parameter] = newValue.toLowerCase()
+        }
+      }
+    },
+
+    // Apply id to multiple elements based on their obj definition
+    set_ID_multiple(arr, arr2, strToRemove, strToPlace) {
+      for (let i = 0; i < arr2.length; i++) {
+        let targetID = arr2[i].replace(strToRemove, strToPlace)
+        arr[i].id = targetID
+      }
+    },
+
+    // Assign class to multiple elements based on their obj definition
+    set_Class_multiple(arr, classNames) {
+      for (let i = 0; i < arr.length; i++)
+        classNames.forEach((j) => arr[i].classList.toggle(j));
+    },
+
+    // Assign class to multiple elements based on their obj definition
+    m2mClassList(elArr, classArr, flag) {
+      flag === "add" ? elArr.forEach((el) => el.classList.add(...classArr)) : "";
+      flag === "remove"
+        ? elArr.forEach((el) => el.classList.remove(...classArr))
+        : "";
+      // flag === "toggle" ? elArr.forEach((el) => el.classList.toggle(...classArr)) : "";
+      if (flag === "toggle") {
+        elArr.forEach((el) => {
+          classArr.forEach((elC) => {
+            el.classList.toggle(elC);
+          });
+        });
+      }
+    
+      return
+    },
+
+    // Remove multiple Attributes from one element
+    remove_atts(el, att_arr) {
+      att_arr.forEach(att => el.removeAttribute(att))
+      return
+    },
+
+    // Remove Attribute from multiple elements based on their obj definition
+    remove_Attribute_multiple(arr, attrName) {
+      for (let i = 0; i < arr.length; i++) arr[i].removeAttribute(attrName)
+    },
+
+    // Remove Attribute from multiple elements based on their obj definition
+    remove_Style_multiple(arr, styleNames) {
+      for (let i = 0; i < arr.length; i++)
+        styleNames.forEach((j) => (arr[i].style.j = null));
+    },
+
+    // Remove Attribute from multiple elements based on their obj definition
+    remove_Style_multiple_children(arr, styleNames) {
+      for (const el of arr) {
+        styleNames.forEach((j) => {
+          el.style.removeProperty([j]);
+
+          for (const ell of el.children) {
+            styleNames.forEach((k) => {
+              ell.style.removeProperty([k]);
+            });
+          }
+        });
+      }
+    },
+
+    // format HTML, body and PageDiv
+    extract_table_children(el) {
+      for (let el_child of el.children) {
+        if (el_child.tagName === "P") {
+          el_child.parentNode.removeAttribute("style");
+          el_child.parentNode.innerHTML = el_child.innerHTML;
+        } else {
+          // log("table cel might have more than a child");
+        }
+      }
+      return;
+    },
+
+    Hide_items(itemParam, dropTarget, unsure) {
+      let itemsCollection = document.querySelectorAll(itemParam);
+      for (const el of itemsCollection) {
+        let hasClass = el.hasAttribute("class");
+        if (!hasClass) {
+          dropTarget.appendChild(el);
+        } else {
+          if (!unsure) {
+            dropTarget.appendChild(el);
+          }
+        }
+      }
+    },
+
+    replaceTag(elTarget, elType) {
+      let $oldEl = elTarget;
+      let $newEl = document.createElement(elType);
+
+      Array.from($oldEl.attributes).map((el) =>
+        $newEl.setAttribute(el.name, el.value)
+      );
+
+      $oldEl.parentNode.insertBefore($newEl, $oldEl);
+    },
+
+    removeElements(arr) {
+      for (let el of arr) {
+        if (el.children.length < 1) {
+          el.remove();
+        } else {
+          error("Found non empty Anchor => ", el);
+
+          if (el.children[0].tagName === "IFRAME") {
+            warn("IFRAME FOUND");
+            formatIframe(el);
+          }
+        }
+      }
+    },
+
+    // Remove elements of any given array
+    removeEmptyNesting(elem) {
+      for (let el of elem.children) {
+        if (el.children.length < 1) {
+          el.remove();
+        } else {
+          error("Found non empty Anchor => ", el);
+        }
+      }
+    },
+
+    // Create a new div	=>	attach data to it	=>	Return as text	=> |
+    htmlToTxt(html_data) {
+      let tmp_div = document.createElement("div");
+      tmp_div.innerHTML = html_data;
+      return tmp_div.textContent || tmp_div.innerText || "";
+    },
+
+    formatCs(arr) {
+      for (let el of arr) {
+        el.removeAttribute("style");
+        el.classList.add("flex-fill", "p-3", "position-relative");
+      }
+    },
+
+    populate_module_pages(arr, tmpArr) {
+      let myArr = [];
+      let p = 0;
+      for (let n = 0; n < tmpArr.length; n++) {
+        myArr[n] = arr.slice(tmpArr[n], tmpArr[n + 1]);
+
+        for (let k = 0; k < myArr[n].length; k++) {
+          if (myArr[n][k].type === "page") {
+            p = p + 1;
+            myArr[n][k].moduleNumber = n + 1;
+            myArr[n][k].pageLocal = k;
+            myArr[n][k].pageGlobal = p;
+
+            if (myArr[n][k].active) {
+              globalThis.activePagePosition = myArr[n][k].pageGlobal;
+            }
+          }
+        }
+      }
+      return myArr;
+    },
+
+    grouped_pages(arr, tmpArr, ref_type) {
+      let myArr = [];
+      let p = 0;
+      for (let n = 0; n < tmpArr.length; n++) {
+        myArr[n] = arr.slice(tmpArr[n], tmpArr[n + 1]);
+
+        for (let k = 0; k < myArr[n].length; k++) {
+          if (myArr[n][k].type === ref_type) {
+            p = p + 1;
+            myArr[n][k].module = n + 1;
+            myArr[n][k].local = k;
+            myArr[n][k].global = p;
+
+            if (myArr[n][k].active) {
+              tdd.currentPage = myArr[n][k].global;
+            }
+          }
+        }
+        // let pp = tmpArr.length - 1
+      }
+      return myArr;
+    },
+
+    // delete Property/'s from Object
+    /*
+    delete_obj_props(ref_item, arr) {
+        arr.forEach((prop, index, arr) => {
+            delete ref_item.prop
+        })
+        return
+    }
+    */
+
+    // set style property to multiple elements
+    set_property_value_multiple(ref_prop, ref_value, arr) {
+      arr.forEach((el, index, arr) => {
+        el.style.setProperty(ref_prop, ref_value);
+      });
+      return;
+    },
+
+    // remove or set style property on multiple elements
+    remove_set_property(ref_prop, arr) {
+      arr.forEach((el, index, arr) => {
+        el.style.removeProperty(ref_prop);
+      });
+      return;
+    },
+
+    getSabaToolbox(flag) {
+      // log("getSabaToolbox(flag) => ", flag)
+      let tmp = false
+      parseInt(window[`Var_${flag}`].getValue()) === 1 ? tmp = true : '';
+      return tmp
+    },
+
+    setToolboxItem(flag) {
+      let tmp = document.createElement('button')
+      tmp.classList.add(
+        'list-group-item',
+        'list-group-item-action',
+        'border-0',
+        'd-flex',
+        'gap-2',
+        // 'bg-dark',
+        // 'text-light'
+      )
+
+      // let att = tdd.dictionary.labels.toolbox_items[flag][`${currentLanguage}_tooltip`]
+      // tmp.setAttribute('tooltip', att)
+
+      let en_link = tdd.dictionary.labels.toolbox_items[flag].en_link
+      tmp.setAttribute('data-enlink', en_link)
+
+      let fr_link = tdd.dictionary.labels.toolbox_items[flag].fr_link
+      tmp.setAttribute('data-frlink', fr_link)
+
+      // let nm = tdd.dictionary.labels.toolbox_items[flag]
+      // tmp.setAttribute('data-name', nm[key])
+
+      let icon = `<i class="bi bi-${tdd.dictionary.labels.toolbox_items[flag].icon}"></i>`
+      let txt = `<h6>${tdd.dictionary.labels.toolbox_items[flag][currentLanguage]}</h6>`
+
+      tmp.innerHTML = `${icon} ${txt}`
+
+      tmp.addEventListener('click', tdd.lib.openToolboxLink)
+      return tmp
+    },
+
+
+    openToolboxLink(ev) {
+      let tmp = ev.target.closest('button')
+      log('clicked => ', tmp.dataset[`${currentLanguage}link`])
+      // let url = tmp.dataset[`${currentLanguage}link`]
+      let url = ev.target.closest('button').dataset[`${currentLanguage}link`]
+
+      window.open(url, '_blank');
+      return
+    },
+
+
+  },
+
+  //-----------------------------------------------------------------------------------------
+
+  /** 🟥  //  Layout methods  ============================= */
+  ui: {
+    /** ===================================================== */
+
+    //app $appVersion
+    $appVersion() {
+      // let appV = document.createElement('p')
+      let appV = document.createElement('div')
+      appV.id = 'app-version'
+      // appV.classList.add('app-version', 'text-info', 'visually-hidden-focusable')
+      // appV.classList.add('app-version')
+      appV.classList.add('container', 'app-version', 'text-end', 'fs-6', 'text-dark')
+      appV.setAttribute('aria-hidden', 'true')
+      appV.textContent = $appVersion
+      return appV;
+    },
+
+    // init UI elements
+    init_ui() {
+      if (!tdd.ready.toc) {
+        error("@ INIT UI => Waiting for TOC");
+        //Do Something While Waiting / Spinner Gif etc.
+      } else {
+        // SET condition here before rendering the ui elements in cover page mistakenly
+        tdd.App.remove_saba_styles()
+        this.init_Elements();
+      }
+      return;
+    },
+
+    /** ===================================================== */
+    // elements
+    init_Elements() {
+      let ui_df = new DocumentFragment();
+
+      tdd.$ui.$header = this.header();
+      tdd.$ui.$main = this.main();
+      // tdd.$ui.$footer = this.footer();
+      tdd.$ui.$wcfooter = this.wcfooter();
+
+      ui_df.appendChild(tdd.$ui.$header);
+      ui_df.appendChild(tdd.$ui.$main);
+      // ui_df.appendChild(tdd.$ui.$footer);
+      ui_df.appendChild(tdd.$ui.$wcfooter);
+
+      $body.prepend(ui_df);
+
+
+
+
+
+      //5
+      // let $nav = document.querySelector('nav');
+      let $topBar = document.querySelector('header');
+      let scrollCheck = () => {
+        // window.scrollY >= 80 ? $nav.classList.add("scrolled") : $nav.classList.remove("scrolled");
+        window.scrollY >= 80 ? $topBar.classList.add("scrolled") : $topBar.classList.remove("scrolled");
+      }
+      window.addEventListener("scroll", scrollCheck);
+
+
+
+      // return this.generate_ui("hi")
+      // this.generate_ui("hi")
+      this.generate_ui("true");
+      // return log('END init_Elements')
+      return;
+    },
+
+    /** ===================================================== */
+    init_dialog_data() {
+      // RESET data before filling
+      tdd.title_page ? (dialog_data = {}) : "";
+
+      dialog_data = {
+        /*
+        default_name (to add in button attribute): {
+            'head'  Mandatory | (Do not change): 'head1',
+            'msg'   Mandatory | (Do not change): 'Hello from msg1',
+            'yes'   Optional  | (Do not change): 'A1',
+            'no'    Optional  | (Do not change): 'B1',
+            'ok'    Optional  | (Do not change): 'ok' 
+        },
+        */
+        // msg1: { 'head': 'head1', 'msg': 'Hello from msg1', 'yes': 'A1', 'no': 'B1', 'ok': 'ok' },
+        // msg2: { 'head': 'head2', 'msg': '<p style="color: red"><b>Hello</b></p> from <a href="http://google.ca" target="blank">Link</a> in msg2', 'yes': 'A2', 'no': 'B2', 'ok': 'ok2' },
+        // msgen: { 'head': 'head1', 'msg': 'Hello from msg1', 'yes': 'A1', 'no': 'B1', 'ok': 'ok' },
+        // msgfr: { 'head': 'head2', 'msg': '<p style="color: red"><b>Hello</b></p> from <a href="http://google.ca" target="blank">Link</a> in msg2', 'yes': 'A2', 'no': 'B2', 'ok': 'ok2' },
+        en: {
+          msg: `${tdd.dictionary.core.cover.custom_title.msg.en}`,
+          yes: `${tdd.dictionary.core.cover.custom_title.buttons.yes.en}`,
+          no: `${tdd.dictionary.core.cover.custom_title.buttons.no.en}`,
+        },
+        fr: {
+          msg: `${tdd.dictionary.core.cover.custom_title.msg.fr}`,
+          yes: `${tdd.dictionary.core.cover.custom_title.buttons.yes.fr}`,
+          no: `${tdd.dictionary.core.cover.custom_title.buttons.no.fr}`,
+        },
+      };
+      log("AFTER RESET modals data ", dialog_data);
+      return dialog_data;
+    },
+
+    // Cover UI
+    // init_cover(pp) {
+    /** ===================================================== */
+    init_cover() {
+      tdd.title_page = true;
+
+      $modal = tdd.dialog.init_modal();
+      // Link modal to bootstrap class
+      bootstrap.Modal.getOrCreateInstance($modal, { keyboard: false });
+
+      dialog_data = tdd.ui.init_dialog_data();
+      log("AFTER RESET modals data ", dialog_data);
+
+      $pageDiv.append($modal);
+      log("--------------------------------------");
+
+      // Remove the Close button from Language Cover Page
+      let $close_btn = $modal.querySelector(".btn-close");
+      $close_btn.remove();
+
+      // Disable closing the modal with esc key
+      $modal.keyboard = false;
+
+      tdd.nextPage = tdd.toc_list[tdd.toc_list.indexOf(tdd.toc_list.find((el) => el.type === "page"))];
+      // log('tdd.nextPage EN = ', tdd.nextPage.en_link)
+      // log('tdd.nextPage FR = ', tdd.nextPage.fr_link)
+
+      let ui_df = new DocumentFragment();
+
+      const $course_logo = document.createElement("img");
+
+      $course_logo.classList.add(
+        "row",
+        "logo",
+        "pt-5",
+        "mx-auto",
+        "d-block",
+        "w-auto"
+      );
+
+      $course_logo.src = "./assets/img/logo.png";
+
+      let $course_logo_alt_text = `${tdd.dictionary.core.cover.logo.en} - ${tdd.dictionary.core.cover.logo.fr}`
+
+      // Added alt text for course logo 20240131
+      tdd.tmpAttArr = [$course_logo]
+      tdd.tmpAttObj = {
+        "alt": $course_logo_alt_text,
+        "title": $course_logo_alt_text,
+        "tooltip": $course_logo_alt_text
+      }
+      tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+      tdd.lib.reset_loop_setAtts()
+
+      // Titles container
+
+      let $course_language = document.createElement("div");
+      $course_language.classList.add(
+        "row",
+        "d-flex",
+        "justify-content-between",
+        "py-5",
+        "mx-auto",
+        "gap-5",
+        "rounded-5"
+      );
+
+      // log("toc_list from within cover = ", tdd.toc_list[0].en_name, tdd.toc_list[0].fr_name);
+
+      // Placeholder
+      const $course_en = document.createElement("div");
+      const $course_fr = document.createElement("div");
+
+      // $course_en.classList.add("col", "d-flex", "flex-column", "justify-content-start", "align-items-center", "bg-light", "rounded-3", "p-4", "mx-5", "text-center", "shadow");
+      // $course_fr.classList.add("col", "d-flex", "flex-column", "justify-content-start", "align-items-center", "bg-light", "rounded-3", "p-4", "mx-5", "text-center", "shadow");
+      let classListArr = ["col", "d-flex", "flex-column", "justify-content-start", "align-items-center", "bg-light", "rounded-3", "p-4", "mx-5", "text-center", "shadow"];
+      tdd.lib.m2mClassList([$course_en, $course_fr], classListArr, "add");
+
+      // Course Titles
+      const $title_en = document.createElement("h3");
+      const $title_fr = document.createElement("h3");
+
+      $title_en.textContent = tdd.toc_list[0].en_name
+      $title_fr.textContent = tdd.toc_list[0].fr_name
+
+
+
+
+      //20240424
+
+      // log('20240424 tdd.custom_title.linear = ', tdd.custom_title)
+
+
+      // Lang Buttons
+      const $btn_en = document.createElement("button");
+      $btn_en.id = "btn_en";
+      $btn_en.type = "button";
+      $btn_en.classList.add("btn", "btn-outline-dark", "shadow-sm", "rounded-1", "mt-auto");
+      $btn_en.textContent = tdd.dictionary.core.cover.buttons.en;
+
+      tdd.tmpAttArr = [$btn_en]
+      tdd.tmpAttObj = {
+        "data-title": tdd.nextPage.en_link,
+        "data-lang": "en",
+        "data-bs-toggle": "modal",
+        "data-bs-target": "#modal",
+        "data-d-obj": "en",
+        "data-d-cat": "2",
+        "data-d-htm": "true",
+        "data-d-fncall": "dialog_events"
+      }
+      tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+      tdd.lib.reset_loop_setAtts()
+
+      const $btn_fr = document.createElement("button");
+      $btn_fr.id = "btn_fr";
+      $btn_fr.type = "button";
+      $btn_fr.classList.add("btn", "btn-outline-dark", "shadow-sm", "rounded-1", "mt-auto");
+      $btn_fr.textContent = tdd.dictionary.core.cover.buttons.fr;
+
+      tdd.tmpAttArr = [$btn_fr]
+      tdd.tmpAttObj = {
+        "data-title": tdd.nextPage.fr_link,
+        "data-lang": "fr",
+        "data-bs-toggle": "modal",
+        "data-bs-target": "#modal",
+        "data-d-obj": "fr",
+        "data-d-cat": "2",
+        "data-d-htm": "true",
+        "data-d-fncall": "dialog_events"
+      }
+      tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+      tdd.lib.reset_loop_setAtts()
+
+      log('added listeners')
+
+      log('tdd.custom_cover => ', tdd.custom_cover)
+      if (tdd.custom_cover === 1) {
+        $btn_en.addEventListener("click", tdd.dialog.select_modal);
+        $btn_fr.addEventListener("click", tdd.dialog.select_modal);
+      } else if (tdd.custom_cover === 0) {
+        $btn_en.addEventListener("click", () => trivExitPage(tdd.nextPage.en_link, true));
+        $btn_fr.addEventListener("click", () => trivExitPage(tdd.nextPage.fr_link, true));
+        // $btn_fr.addEventListener("click", tdd.dialog.select_modal);
+
+        // log("tdd.nextPage[`${lang}_link`] = > ", tdd.nextPage[`${lang}_link`])
+        log("tdd.nextPage = > ", tdd.nextPage)
+        // trivExitPage(tdd.nextPage[`${lang}_link`], true)
+      }
+
+      log('added listeners end')
+
+      $course_en.appendChild($title_en);
+      $course_en.appendChild($btn_en);
+
+      $course_fr.appendChild($title_fr);
+      $course_fr.appendChild($btn_fr);
+
+      $course_language.appendChild($course_en);
+      $course_language.appendChild($course_fr);
+
+      ui_df.appendChild($course_logo);
+      ui_df.appendChild($course_language);
+
+      $pageDiv.classList.add(
+        "container",
+        "d-flex",
+        "flex-column",
+        "justify-content-center",
+        "align-items-center",
+        "align-self-center",
+        "justify-self-center",
+        "p-5",
+        "position-relative",
+        "w-auto",
+        "h-100",
+      );
+
+
+      $body.className = ""
+
+      $body.classList.add(
+        "h-100",
+        "m-0",
+        "d-flex",
+        "flex-column",
+        "justify-content-around",
+        "align-items-center",
+        "title-cover-bg"
+      )
+
+      $pageDiv.prepend(ui_df);
+
+      // let check_auto = tdd.App.redirect_check(tdd.nextPage);
+      let check_auto = tdd.App.redirect_check();
+
+      let visitedPage = ''
+      let visitedLink = ''
+
+      if (tdd.custom_title.lang != "title") {
+        visitedPage = tdd.toc_list[tdd.toc_list.indexOf(tdd.toc_list.find((el) => el.global === tdd.custom_title.prev))];
+        visitedLink = visitedPage[`${tdd.custom_title.lang}_link`]
+      }
+
+      check_auto
+        ? trivExitPage(visitedLink, true)
+        : "";
+
+      log('HERE AHMED 20240423')
+      return;
+    },
+
+
+    /** ===================================================== */
+    // PAGE UI
+    init_page(flag_activePage) {
+      // log('call from init_page FN with param => ', flag_activePage)
+      tdd.custom_title.home = false;
+      tdd.custom_title.prev = flag_activePage.global;
+      log("tdd.custom_title adjusted at init page => ", tdd.custom_title)
+      tdd.App.setLocalData(tdd.courseCode, tdd.custom_title)
+
+      
+      /* ============================================================================
+      USING INCLUDE HTML IN INIT PAGE WORKING
+      ===============================================================================*/
+      let page = document.createElement('div')
+      page.id = 'exPage';
+      let shortName = Var_courseShortName.getValue() ? Var_courseShortName.getValue() : '';
+      
+      // let pageName = `${currentLanguage}_${shortName}_0${flag_activePage.module}0${flag_activePage.local}.html`
+      
+      let pageName = ''
+      // pageName = `${currentLanguage}_${shortName}_${tdd.lib.pad(flag_activePage.module)}${tdd.lib.pad(flag_activePage.local)}.html`
+
+      
+      /*
+      pageName = `${currentLanguage}_${tdd.lib.pad(flag_activePage.module)}${tdd.lib.pad(flag_activePage.local)}.html`
+      */
+     
+      shortName != 0
+      ? pageName = `${currentLanguage}_${shortName}_${tdd.lib.pad(flag_activePage.module)}${tdd.lib.pad(flag_activePage.local)}.html`
+      : pageName = `${currentLanguage}_${tdd.lib.pad(flag_activePage.module)}${tdd.lib.pad(flag_activePage.local)}.html`
+
+      log('pageName = > ', pageName)
+
+      page.classList.add("fade")
+      page.setAttribute('tdd-include-html', pageName)
+      $pageDiv.prepend(page)
+
+      tdd.lib.includeHTML()
+
+      setTimeout(() => {
+        // console.log("Delayed for 1 second.");
+        checkHTML()
+        page.classList.add("show")
+      }, "100");
+
+      /* ============================================================================
+      END USING INCLUDE HTML IN INIT PAGE WORKING
+      ===============================================================================*/
+      return;
+    },
+
+    /** ===================================================== */
+    //  jumbo
+    jumbo() {
+      // here for now then will allocate it to a fn
+
+
+
+
+
+
+      // let $jumbo = $pageDiv.querySelector(".jumbo-img");
+
+      // if ($jumbo) {
+      //   // log("found jumbo image", $jumbo)
+      //   // log("found jumbo image", $jumbo.children)
+      //   // log("found jumbo image", $jumbo.childNodes)
+
+      //   let a = $jumbo.querySelector("img");
+      //   if (a) {
+      //     // log("image source = ", a.src)
+      //     $jumbo.classList.add("deleting");
+      //     return a.src;
+      //   }
+      // }
+
+
+      tdd.App.remove_saba_styles()
+
+
+
+
+
+      let jumboItems = $pageDiv.querySelectorAll('.jumbo')
+      log('jumboItems => ', jumboItems)
+
+
+      // log('activePage in JUMBO = ', tdd.activePage[`${currentLanguage}_name`])
+      let jumbo = this.extract_jumbo(jumboItems)
+      return jumbo
+
+    },
+
+
+
+
+
+
+
+
+
+    format_txt_content(el) {
+      log('el => ', el.children)
+
+      // tdd.format.formatTXT(el.children)
+      let mm = tdd.format.formatDIV(el.children)
+      // return el
+      return mm
+    },
+
+
+
+
+
+
+
+    extract_jumbo(arr) {
+      let jumbo_img = ''
+      let jumbo_txt = ''
+
+      arr.forEach(el => {
+        if (Array.from(el.classList).includes('jumbo-img')) {
+          jumbo_img = el.querySelector('img').src
+          // el.remove()
+          el.parentNode.removeChild(el)
+        } else if (Array.from(el.classList).includes('jumbo-txt')) {
+          // jumbo_txt = el.textContent
+          // jumbo_txt = el.innerHTML
+
+          let tmp = el
+          el.remove()
+          log('removed el = ', el)
+
+          jumbo_txt = tdd.ui.format_txt_content(tmp)
+          log('jumbo_txt = ', jumbo_txt)
+        }
+      })
+
+      let jumbo_container = document.createElement('div')
+      jumbo_container.className = "row full-w-jumbo p-5 mb-4"
+
+      jumbo_container.innerHTML = `
+      <!-- <div class="row full-w-jumbo p-5 mb-4">  -->
+          <div class="col-lg-6 col-md-8 col-sm-12 text-light">
+            <div class="container">
+            
+
+              <h1 class="display-4 pt-5 mt-5">${tdd.activePage[`${currentLanguage}_name`]}</h1>
+
+
+              <h2 class="display-6 pt-0 mt-0 text-info">
+                Fire is everyone's responsibility!
+              </h2>
+              <p class="lead my-3">
+                Fire extinguishers are available in every building but you must know how to use them safely and effectively. Improper use of fire extinguishers can lead to injuries, fail to put out a fire, or even make the fire worse.
+              </p>
+              <p class="lead my-3">
+                The purpose of this course is to ensure that all CAF members and DND employees:
+              </p>
+              <ul class="lead">
+                <li>can recognize hazardous conditions and react appropriately</li>
+                <li>are familiar with the procedures they must follow in the event of a fire emergency</li>
+                <li>know where to find and how to use fire protection equipment and emergency equipment provided by the employer</li>
+              </ul>
+              <!--
+              <p class="lead mb-0">
+                <button class="btn btn-lg btn-outline-info fw-bold">
+                  Call to Action
+                </button>
+                </p>
+                -->
+            </div>
+          </div>
+        <!--</div>-->
+
+        <style>
+          .full-w-jumbo {
+            background: linear-gradient(-25deg, transparent, rgba(0, 0, 0, 0.95) 90%),
+              linear-gradient(25deg, transparent, #0f0 100%),
+              linear-gradient(-135deg, transparent, #f00 100%),
+                url(${jumbo_img});
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            background-size: cover;
+          }
+        </style>
+      `
+      return jumbo_container
+
+    },
+    /** ===================================================== */
+    //  USE jumbo
+    place_jumbo(flag) {
+      // $main.style.backgroundImage = `url('${jumbo}')`;
+      // $main.style.backgroundRepeat = "no-repeat";
+
+      // $main.style.backgroundSize = "contain";
+      // // $main.style.backgroundSize = 'cover'
+      // $main.style.backgroundPosition = "top center";
+
+      // $body.style.backgroundImage = `url('${jumbo}')`;
+      // $body.style.backgroundImage = `url('${flag}')`;
+      // $body.style.backgroundRepeat = "no-repeat";
+      // $body.style.backgroundSize = "contain";
+      // // $body.style.backgroundSize = 'cover'
+      // $body.style.backgroundPosition = "top center";
+      // $body.classList.add("jumbo-body", "overflow-x-hidden");
+      return;
+    },
+
+    /** ===================================================== */
+    // offcanvas
+    navbarOffCanvas() {
+      let df = new DocumentFragment()
+      let _navbar = document.createElement("tdd-navbar");
+
+      _navbar.classList.add("offcanvas", "bg-dark");
+
+      // 0 => (start) from left | 1=> (end) from right
+      tdd.menu_pos === 0 ? _navbar.classList.add("offcanvas-start") : ''
+      tdd.menu_pos === 1 ? _navbar.classList.add("offcanvas-end") : ''
+
+      // customizable off canvas width from Saba config variable
+      tdd.menu_width != 0 ? _navbar.style.width = `${tdd.menu_width}px` : ''
+
+      _navbar.id = "navbar";
+
+      tdd.tmpAttArr = [_navbar]
+      tdd.tmpAttObj = { "tabindex": -1, 'aria-labelledby': "navbar-label", "data-bs-scroll": "true" }
+      tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+      tdd.lib.reset_loop_setAtts()
+
+      let _navbar_head = document.createElement("div");
+      // _navbar_head.classList.add("offcanvas-header", "px-4", "pb-2");
+      _navbar_head.classList.add("offcanvas-header", "justify-content-end");
+
+      let _navbar_title = document.createElement("h5");
+      _navbar_title.classList.add("offcanvas-title", "text-secondary");
+      _navbar_title.id = "navbar-label";
+
+      // _navbar_title.textContent = tdd.dictionary.labels.toc.title[currentLanguage];
+      // _navbar_title.textContent = 'Toolbox'
+      _navbar_title.textContent = tdd.dictionary.labels.toolbox.title[currentLanguage];
+
+      let _navbar_close_btn = document.createElement("button");
+      _navbar_close_btn.classList.add("btn-close", "btn-close-white");
+
+      tdd.tmpAttArr = [_navbar_close_btn]
+      tdd.tmpAttObj = { "type": 'button', 'data-bs-dismiss': "offcanvas", "aria-label": "Close", "aria-bs-target": "#navbar" }
+      tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+      tdd.lib.reset_loop_setAtts()
+
+      let _navbar_body = document.createElement("div");
+      // _navbar_body.classList.add("offcanvas-body", "pe-2");
+      // _navbar_body.classList.add("offcanvas-body", "d-flex", "gap-5", "flex-column", "bg-transparent", "p-0");
+      _navbar_body.classList.add("offcanvas-body", "d-flex", "gap-4", "flex-column");
+
+
+      let $toolboxMenu = tdd.ui.comps.init_toolboxMenu()
+      _navbar_body.appendChild($toolboxMenu)
+
+      // append accordion to off canvas
+      currentLanguage === "en" || currentLanguage === "fr"
+        ? _navbar_body.appendChild($toc)
+        : "";
+
+      // let $appversion = tdd.ui.$appVersion();
+      // _navbar_body.appendChild($appversion)
+
+      // _navbar_head.appendChild(_navbar_title);
+      _navbar_head.appendChild(_navbar_close_btn);
+
+      df.appendChild(_navbar_head);
+      df.appendChild(_navbar_body);
+
+      let $appversion = tdd.ui.$appVersion();
+      df.appendChild($appversion)
+
+      _navbar.appendChild(df);
+
+      return _navbar;
+    },
+
+    /** ===================================================== */
+
+    /** ===================================================== */
+    nav() {
+      /** =====================================================
+       * Create the nav component:
+       * 1.  Define $nav that will return from this function
+       * 2.  Create the brand container that will include [ course info, page nav and TOC menu]
+       * 3.  Get the names from DICTIONARY
+       * 4.  Add listeners to the select events
+       * =====================================================
+       */
+
+      let df = new DocumentFragment()
+
+      let $nav = document.createElement("nav");
+
+      $nav.classList.add("navbar", "mx-auto")
+      $nav.setAttribute("aria-label", "Main Navigation");
+
+      let $brand = tdd.ui.comps.nav_brand();
+      let $toolbar = tdd.ui.comps.nav_toolbar();
+      let $navbar = tdd.ui.navbarOffCanvas();
+
+      df.appendChild($brand);
+      df.appendChild($toolbar);
+      df.appendChild($navbar);
+
+      $nav.appendChild(df);
+      return $nav;
+    },
+
+
+
+    /** ===================================================== */
+    header() {
+      /** =====================================================
+            Create the navigation buttons for the pages:
+            =====================================================
+            1.  Define $header that will return from this function
+            2.  Add classes to the obj
+            3.  Define the TOC Navigation Placeholder & append it to the header obj
+            4.  Define the Pages Navigation Placeholder & append it to the header obj
+            5.  
+            6.  
+            7.  Return the obj to the calling function
+        */
+
+      //1
+      let $header = document.createElement("header");
+
+      if (tdd.jumbo) {
+        if (tdd.jumbo[0] === 0) {
+          //2
+          $header.classList.add(
+            // "navbar",
+            // "navbar-expand-xxl",
+            // "navbar-collapse",
+            // "navbar",
+            "container-fluid",
+            // "p-3",
+            "px-3",
+
+            "bg-dark",
+            // "bg-danger",
+            // "bg-transparent",
+            "text-light",
+            "sticky-top",
+            // "position-fixed",
+            "align-self-start"
+          );
+          // $body.insertBefore(tdd.$ui.$main, tdd.$ui.$header)
+
+          //3
+          let $nav = this.nav();
+          $header.appendChild($nav);
+
+          //4
+          // let $pageNav = this.pageNav();
+          // $header.appendChild($pageNav);
+          // $nav.appendChild($pageNav);
+        } else if (tdd.jumbo[0] === 1) {
+          //2
+          // $header.classList.add(
+          //   "navbar",
+          //   // "navbar-expand-xxl",
+          //   "navbar-collapse",
+          //   "navbar",
+          //   // "bg-dark",
+          //   "bg-transparent",
+          //   "text-light",
+          //   "sticky-top"
+          // );
+          $header.classList.add(
+            "container-fluid",
+            "p-3",
+            "bg-secondary"
+          );
+          // $body.insertBefore(tdd.$ui.$main, tdd.$ui.$header)
+
+          //3
+          let $nav = this.nav();
+
+          $header.appendChild($nav);
+
+
+          let jumbo = this.jumbo();
+          // jumbo ? this.place_jumbo(jumbo) : warn("NO JUMBO FOUND");
+
+          // let $jumbo = this.jumbo()
+          // $header.appendChild($jumbo);
+
+
+          $header.appendChild(jumbo);
+
+          //4
+          // let $pageNav = this.pageNav();
+          // $header.appendChild($pageNav);
+          // $nav.appendChild($pageNav);
+        }
+      }
+
+      /* BRAND
+
+      let $brandSource = `./dnd_logo_${currentLanguage}.svg`;
+
+      $brand.src = $brandSource;
+    
+      tdd.tmpAttArr = [$brand]
+      tdd.tmpAttObj = {
+        "alt": 'Defence logo',  
+        "title": 'Defence logo',  
+        "tooltip": 'Defence logo'  
+      }
+      tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+      tdd.lib.reset_loop_setAtts()
+
+      $brand.style.height = '20px';
+      $brand.classList.add('ml-auto', 'bd-highlight')
+
+      $titleName.classList.add('mr-3')
+
+      $brand_bar.classList.add('py-3')
+      $brand_bar.style.display = 'flex';
+      //    $brand_bar.appendChild($titleName)
+      $brand_bar.appendChild($chapterName)
+      $brand_bar.appendChild($brand)
+
+      $header.appendChild($brand_bar)
+      
+      */
+
+      return $header;
+    },
+
+    /** ===================================================== */
+    pageDiv() {
+
+      // // let $extSRC = document.querySelectorAll(".ext-text")
+      // let $extSRC = document.querySelector(".ext-text")
+      // $extSRC ? log("$extSRC FOUND => ", $extSRC) : ""
+      // let a = ''
+      // let b = ''
+      // $extSRC ? a = $extSRC.id : "";
+
+      // $extSRC.id ? b = document.querySelector(`#${a}`) : ''
+      // log('bbbbbbbbbbbbbbbbbb ', b)
+      // b ? b.style.position = null : ''
+
+      // tdd.App.remove_saba_styles()
+
+
+      let $fixDIV = document.getElementById("fixDIV");
+      // $fixDIV.removeAttributeNode($fixDIV.getAttributeNode('style'))
+
+      let fixAtt = $fixDIV.getAttributeNode("style");
+      $fixDIV ? $fixDIV.removeAttributeNode(fixAtt) : "";
+
+      // $pageDiv.style.clipPath = 'none'
+      $pageDiv.style.clipPath = null
+      $pageDiv.style.clip = null
+
+      $pageDiv.classList.add(
+        // "justify-self-stretch",
+        // "p-3",
+        "container",
+        "pt-0",
+        "position-relative",
+        // "overflow-visible",
+      );
+      return;
+    },
+
+    /** ===================================================== */
+    // elements
+    main() {
+      let $main = document.createElement("main")
+      $main.classList.add(
+        // "container-fluid",
+        "container",
+        // "p-3",
+        "p-3",
+        "pt-0",
+        "w-100",
+        "overflow-x-hidden",
+        "position-relative",
+        "d-flex",
+        "flex-column",
+        "justify-content-start",
+        "align-items-center",
+        "flex-grow-1",
+        "mb-auto",
+      );
+
+      tdd.ui.pageDiv();
+
+      let pageName = tdd.ui.comps.getPageName()
+      $main.prepend(pageName)
+      // $pageDiv.prepend(pageName)
+
+      /* TEST ====================================================================================================== */
+      /* 
+      const $tst = document.createElement('my-test')
+      $tst.classList.add('bg-danger')
+      // $tst.textContent = `${tdd.dictionary}`
+      $tst.innerHTML = `<div><slot>${tdd.dictionary}</slot></div>`
+      $tst.setAttribute('tst', 'dddd')
+      
+      $main.appendChild($tst)
+      */
+      /* END TEST ====================================================================================================== */
+      
+      $main.appendChild($pageDiv)
+
+      // let nn = URL(`${ $jumbo }`)
+      // $main.style.background = $jumbo
+      // $main.style.backgroundImage = nn
+      // $main.css("background-image", `url(${jumbo})`)
+
+      /*  MOVED TO PLACE JUMBO
+          $main.style.backgroundImage = `url('${jumbo}')`;
+          $main.style.backgroundRepeat = "no-repeat";
+
+          $main.style.backgroundSize = "contain";
+          // $main.style.backgroundSize = 'cover'
+          $main.style.backgroundPosition = "top center";
+      */
+      return $main;
+    },
+
+    /** ===================================================== */
+    // elements
+    footer() {
+      // tdd.$ui.$footer = document.createElement("footer")
+      let $footer = document.createElement("footer");
+      // $footer.classList.add("footer", "mt-auto", "py-3");
+      $footer.classList.add("container-fluid", "footer", "mt-auto", "py-3");
+      // $footer.classList.add("container-fluid", "footer", "mt-auto", "py-3", "align-self-end");
+
+      let $footerContainer = document.createElement("div");
+      $footerContainer.id = "footerContainer";
+      $footerContainer.classList.add("container");
+
+      let $footer_bar = document.createElement("div");
+      $footer_bar.id = "footer_bar";
+      $footer_bar.classList.add('d-flex', 'flex-row', 'justify-content-start', 'align-items-center')
+
+      let $footer_brand = document.createElement("img");
+      $footer_brand.id = "footer_brand";
+      $footer_brand.src = "./assets/img/canada_logo.svg";
+      $footer_brand.alt = "Symbol of the Government of Canada";
+      $footer_brand.style.height = "20px";
+      $footer_brand.classList.add('me-3')
+
+      let $footer_nav = document.createElement("div");
+      $footer_nav.id = "footer_nav";
+
+      // let $copyright = document.createElement("p");
+      let $copyright = document.createElement("span");
+      $copyright.id = "copyright";
+
+      // $copyright.textContent = `\u00A9 ${new Date().getFullYear()} ${tdd.dictionary.labels.footer.copyright[currentLanguage]}`;
+      $copyright.textContent = `${tdd.dictionary.labels.footer.copyright[currentLanguage]}, ${new Date().getFullYear()}.`;
+      // $copyright.classList.add('ms-3', 'd-inline-block', 'align-middle')
+      $copyright.classList.add('pt-1')
+      // updateCopyright()
+
+      $footerContainer.appendChild($footer_bar);
+      $footerContainer.appendChild($footer_nav);
+
+      $footer_bar.appendChild($footer_brand);
+      $footer_bar.appendChild($copyright);
+
+      $footer.appendChild($footerContainer);
+
+      return $footer;
+    },
+
+    /** ===================================================== */
+    // Web Component: Footer
+    wcfooter() {
+      let copyright = `${tdd.dictionary.labels.footer.copyright[currentLanguage]}, ${new Date().getFullYear()}.`
+
+      let $footer = document.createElement("tdd-footer");
+      $footer.classList.add("container-fluid", "footer", "mt-auto", "py-3");
+      $footer.innerHTML = `<span slot='copyright'>${copyright}</span>`
+      return $footer;
+    },
+
+    /** ===================================================== */
+    // elements
+    init_brand() {
+      // log("tdd.ui init elements > loaded")
+
+    },
+
+    /** ===================================================== */
+    // NOT USED YET
+    init_Nav_Options() {
+      // log("tdd.ui init elements > loaded")
+
+      /*
+      NAV OPTIONS
+      
+      globalThis.$navOptions = document.createElement("div")
+
+      $navOptions.id = 'navOptions';
+      $navOptions.classList.add('btn-group', 'btn-group-sm', 'btn-block')
+      $navOptions.setAttribute("aria-label", "Course Options")
+      $navOptions.setAttribute("role", "group")
+
+
+      globalThis.nestedPath = tdd_dictionary.labels.modal_options;
+
+      globalThis.navOptions = reuse_getNestedArr(currentLanguage, nestedPath, false)
+      globalThis.navOptions_names = reuse_getNestedArr(currentLanguage, nestedPath, true)
+      globalThis.navOptions_icons = reuse_getNestedArr('icon', nestedPath, true)
+
+      let option_text = '';
+      let option_icon = '';
+
+      for (let i = 0; i < navOptions.length; i++) {
+          let el = document.createElement("button").cloneNode(true)
+
+          el.id = navOptions[i];
+
+          tdd.tmpAttArr = [el]
+          tdd.tmpAttObj = {
+            "title": navOption[i],
+            "tooltip": navOption[i],
+            "data-toggle": navOption[i],
+            "data-placement": "bottom"
+          }
+          tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+          tdd.lib.reset_loop_setAtts()
+
+          el.classList.add('btn', 'btn-dark')
+
+          option_text = navOptions_names[i];
+          option_icon = '<i class="fa fa-' + navOptions_icons[i] + '"></i>';
+          el.innerHTML = `${option_icon} ${option_text}`;
+          $navOptions.appendChild(el)
+      }
+      */
+    },
+
+    /** ===================================================== */
+    get_course_info() {
+      let courseInfo = {};
+      courseInfo.title = tdd.course.title;
+      courseInfo.module = tdd.course.module;
+      courseInfo.page = tdd.course.page;
+
+      log('courseInfo = ', courseInfo)
+      return courseInfo;
+    },
+
+    /** ===================================================== */
+    // Build UI
+    generate_ui(flag) {
+      //   tdd.ui_loaded = true;
+      //   tdd.ready.ui = true;
+
+      // const interval = setInterval(() => {
+      //     // log('Waiting for TOC...')
+      //     // if( !tdd.js_loaded ) {
+      //     if( !tdd.ready.toc ) {
+      //         log('Waiting for TOC')
+      //         //Do Something While Waiting / Spinner Gif etc.
+      //     }else{
+      //         log('Data found...')
+      //         clearInterval(interval)
+      //           // tdd.ready.ui = true;
+      //           // import('./assets/js/core/toc.js')
+      //           // import('./assets/js/core/ui.js')
+      //     }
+      //     }, 500)
+
+      flag === "true"
+        ? (tdd.ready.ui = true)
+        : error("@ GENERATE UI => flag => ", flag);
+
+      // tdd.ready.ui = true;
+
+      // flag ?  warn("@ GENERATE UI => ready made true => ", flag) : "";
+
+
+      return;
+    },
+
+    /** ===================================================== */
+    // Build UI
+    connect_ui(rr) {
+      // let mm = document.querySelector('header')
+      // tdd.$ui.$header.appendChild(rr)
+      // mm.appendChild(rr)
+      return;
+    },
+
+    // 🟥 COMPONENTS
+    comps: {
+      /*
+      HEADER COMPONENTS  ------------------------------------------------------------------------20240501
+      */
+
+      getPageName() {
+        let courseInfo = tdd.ui.get_course_info();
+
+        let $pageName = document.createElement('h1')
+        $pageName.classList.add('align-self-start', 'p-3')
+        $pageName.textContent = courseInfo.page ? courseInfo.page[`${currentLanguage}_name`] : "";
+        return $pageName
+      },
+
+      nav_brand() {
+        let $brand = document.createElement("tdd-brand");
+        let $title_name = document.createElement("tdd-title");
+        let $module_name = document.createElement("tdd-module");
+        let $page_name = document.createElement("tdd-page");
+
+        $brand.classList.add('nav-brand', 'me-auto')
+        $title_name.classList.add("title-name");
+        $module_name.classList.add("module-name");
+        $page_name.classList.add("page-name");
+
+        let courseInfo = tdd.ui.get_course_info();
+
+        courseInfo.title
+          ? ($title_name.textContent =
+            courseInfo.title[`${currentLanguage}_name`])
+          : "";
+        courseInfo.module
+          ? ($module_name.textContent =
+            courseInfo.module[`${currentLanguage}_name`])
+          : "";
+        courseInfo.page
+          ? ($page_name.textContent =
+            courseInfo.page[`${currentLanguage}_name`])
+          : "";
+
+        $brand.appendChild($module_name);
+        return $brand
+      },
+
+      nav_toolbar() {
+        let toolbar = document.createElement('tdd-toolbar')
+
+        // toolbar.classList.add('ms-auto', 'btn-toolbar')
+        toolbar.classList.add('ms-auto', 'btn-toolbar', 'd-flex', 'gap-2')
+
+        toolbar.setAttribute('role', 'toolbar')
+        toolbar.setAttribute('aria-label', 'Toolbar with button groups')
+
+        // let df = new DocumentFragment()
+
+        let $langToggle = tdd.ui.comps.langToggle()
+        let $toolboxToggle = tdd.ui.comps.toolboxToggle()
+        let $pageNav = tdd.ui.comps.pageNav();
+
+        let btnGroup = document.createElement('div')
+        btnGroup.classList.add('ms-auto', 'btn-group', 'btn-group-sm')
+        btnGroup.setAttribute('role', 'group')
+        btnGroup.setAttribute('aria-label', 'Toolbox group')
+
+        btnGroup.appendChild($langToggle);
+        btnGroup.appendChild($toolboxToggle);
+
+        toolbar.appendChild($pageNav);
+        toolbar.appendChild(btnGroup);
+
+        return toolbar
+      },
+
+
+      // Language Toggle button
+      langToggle() {
+        let langToggle = document.createElement("button")
+        // langToggle.classList.add('btn', 'btn-outline-light', 'rounded-0', 'mx-2', 'bi', 'bi-globe2')
+        // langToggle.classList.add('btn', 'btn-outline-light', 'rounded-0', 'mx-2')
+        // langToggle.classList.add('btn', 'btn-outline-light', 'rounded-circle', 'mx-2')
+        langToggle.classList.add('btn', 'btn-secondary')
+
+        // added 20240501
+        // langToggle.style.width = '3rem';
+        // langToggle.style.height = langToggle.style.width;
+
+        langToggle.type = "button"
+        // langToggle.setAttribute("type", "button")
+
+        let other_lang = ''
+        let other_page = ''
+
+        currentLanguage === 'en' ? other_lang = 'fr' : ''
+        currentLanguage === 'fr' ? other_lang = 'en' : ''
+
+        langToggle.setAttribute("data-trgt-lang", other_lang)
+        langToggle.setAttribute("title", `${tdd.dictionary.labels.toolbox_items.language[currentLanguage]}`)
+        // langToggle.textContent = `${tdd.dictionary.labels.toolbox_items.language[currentLanguage]}`
+        langToggle.textContent = other_lang.toLocaleUpperCase()
+
+        langToggle.addEventListener('click', (e) => {
+          let target_lang = e.target.getAttribute('data-trgt-lang')
+          other_page = tdd.activePage[`${target_lang}_link`]
+
+          tdd.custom_title.lang = target_lang
+          tdd.App.setLocalData(tdd.courseCode, tdd.custom_title)
+          trivExitPage(other_page, true)
+        })
+
+        return langToggle
+      },
+
+      // Menu button
+      toolboxToggle() {
+        /** =====================================================
+              Create the top navigation buttons for the pages:
+              =====================================================*/
+        let toolboxToggle = document.createElement("button");
+
+        // toolboxToggle.classList.add('btn', 'btn-outline-light', 'bi', 'bi-list', 'rounded-0', 'me-2');
+        // toolboxToggle.classList.add('btn', 'btn-outline-light', 'bi', 'bi-grid', 'rounded-0', 'me-2');
+        // toolboxToggle.classList.add('btn', 'btn-dark', 'bi', 'bi-grid', 'rounded-0', 'me-2');
+
+        // toolboxToggle.classList.add('btn', 'btn-secondary', 'bi', 'bi-list');
+        
+
+
+        toolboxToggle.classList.add('btn', 'btn-secondary', 'bi', `${tdd.dictionary.labels.menu.title.icon}`);
+
+  
+        toolboxToggle.type = "button";
+
+        tdd.tmpAttArr = [toolboxToggle]
+        tdd.tmpAttObj = {
+          //"title": tdd.dictionary.labels.toc.title[`${currentLanguage}`],
+          "data-bs-toggle": "offcanvas",
+          "data-bs-target": "#navbar",
+          "aria-controls": "navbar",
+          "aria-label": "Toggle navigation"
+        }
+        tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+        tdd.lib.reset_loop_setAtts()
+
+        return toolboxToggle
+      },
+
+
+
+
+      // Menu button
+      init_toolboxMenu() {
+        let tmpDiv = document.createElement('div')
+
+        let _toolbox_title = document.createElement("h5")
+        _toolbox_title.id = "toolbox-label"
+        _toolbox_title.classList.add("text-secondary", "ps-1", "d-flex", "align-items-center")
+
+        // let icon = `<i class="bi bi-${tdd.dictionary.labels.toolbox.title.icon}"></i>`
+        let icon = ''
+        // let txt = `<h6>${tdd.dictionary.labels.toolbox.title[currentLanguage]}</h6>`
+
+        // let txt = `${tdd.dictionary.labels.toolbox.title[currentLanguage]}`
+
+        let txt = ''
+        // txt = `${tdd.dictionary.labels.toolbox.title[currentLanguage]}`
+
+        _toolbox_title.innerHTML = `${icon} ${txt}`
+
+        // _toolbox_title.textContent = tdd.dictionary.labels.toolbox.title[currentLanguage]
+        // _toolbox_title.textContent = 'Toolbox'
+
+        let tmp = document.createElement('div')
+
+        tmp.classList.add('list-group', 'list-group-flush')
+
+        tmp.classList.add('list-group')
+
+        let df = new DocumentFragment()
+        const $isResources = tdd.lib.getSabaToolbox('resources') ? df.appendChild(tdd.lib.setToolboxItem('resources')) : ""
+        const $isDefinitions = tdd.lib.getSabaToolbox('definitions') ? df.appendChild(tdd.lib.setToolboxItem('definitions')) : ""
+        const $isAbbreviations = tdd.lib.getSabaToolbox('abbreviations') ? df.appendChild(tdd.lib.setToolboxItem('abbreviations')) : ""
+        const $isCustom1 = tdd.lib.getSabaToolbox('toolboxcustom1') ? df.appendChild(tdd.lib.setToolboxItem('custom1')) : ""
+        const $isCustom2 = tdd.lib.getSabaToolbox('toolboxcustom2') ? df.appendChild(tdd.lib.setToolboxItem('custom2')) : ""
+
+
+
+
+        // return df
+        tmp.appendChild(df)
+
+        tmpDiv.appendChild(_toolbox_title)
+        tmpDiv.appendChild(tmp)
+        return tmpDiv
+      },
+      /** ===================================================== */
+      nOfPages() {
+        /** =====================================================
+         * Custome vars are created first in Saba Publisher
+         * Actions for those vars are modified to get values from reserved vars
+         * 
+            =====================================================
+        */
+
+        // let nOfPages = document.createElement("tdd-pages");
+        let nOfPages = document.createElement("button");
+
+        nOfPages.id = 'nOfPages'
+        nOfPages.classList.add('btn', 'btn-secondary');
+        nOfPages.setAttribute("disabled", "disabled");
+
+        nOfPages.textContent = `${Var_sectionPage.getValue()} ${tdd.dictionary.core.page_number_spacer[currentLanguage]} ${Var_sectionPages.getValue()}`;
+
+        return nOfPages;
+      },
+
+      /** ===================================================== */
+      pageNavBtn(btnName, btnDirection, btnSName) {
+        /** =====================================================
+            =====================================================
+        */
+        let $btn = document.createElement("button");
+
+        $btn.type = "button";
+        $btn.id = btnName;
+        $btn.classList.add("btn", "btn-secondary");
+
+        tdd.tmpAttArr = [$btn]
+        tdd.tmpAttObj = {
+          "title": tdd.dictionary.core.navigation[`${btnSName}`][`${currentLanguage}_title`],
+          "tooltip": tdd.dictionary.core.navigation[`${btnSName}`][`${currentLanguage}_tooltip`],
+          "alt": tdd.dictionary.core.navigation[`${btnSName}`][`${currentLanguage}_alt`]
+        }
+        tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+        tdd.lib.reset_loop_setAtts()
+
+        // $btn.textContent = tdd.dictionary.core.navigation[`${btnSName}`][currentLanguage]
+        $btn.textContent = "";
+        $btn.innerHTML = `<i class="bi bi-chevron-${btnDirection}"></i>${$btn.textContent}`;
+
+        return $btn;
+      },
+
+      /** ===================================================== */
+      pageNav() {
+        /** =====================================================
+              =====================================================
+          */
+
+        //1
+        // let $pageNav = new DocumentFragment()
+        let df = new DocumentFragment()
+        let $pageNav = document.createElement("div");
+
+        $pageNav.id = "pageNav";
+        // $pageNav.classList.add('ms-auto', 'btn-group', 'btn-group-sm', 'me-2')
+        $pageNav.classList.add('ms-auto', 'btn-group', 'btn-group-sm')
+        $pageNav.role = "group";
+        $pageNav.setAttribute("aria-label", "Pages Navigation Group");
+
+        let $nOfPages = tdd.ui.comps.nOfPages()
+
+        let $btnPrev = tdd.ui.comps.pageNavBtn('btnPrev', 'left', 'prev')
+        let $btnNext = tdd.ui.comps.pageNavBtn('btnNext', 'right', 'next')
+
+        //4
+        //  log('check for linear and skip ', tdd.custom_title.linear, ' | skip: ', tdd.custom_title.skip)
+        if (!tdd.custom_title.skip && tdd.activePage.global != 1) {
+          $btnPrev.addEventListener("click", trivPrevPage);
+          $btnNext.addEventListener("click", trivNextPage);
+          //  log('HERE >> SKIP IS FALSE')
+          //  log("tdd.activePage.global => ", tdd.activePage.global)
+        } else {
+          if (tdd.activePage.global === 1) {
+            tdd.custom_title.home = true;
+            tdd.App.setLocalData(tdd.courseCode, tdd.custom_title);
+            log("FROM PREV BTN >> tdd.custom_title => ", tdd.custom_title)
+          }
+          // log('HERE >> SKIP IS TRUE')
+          // log("tdd.activePage.global => ", tdd.activePage.global)
+
+          $btnPrev.addEventListener("click", tdd.App.nav_btn_selected);
+          $btnNext.addEventListener("click", tdd.App.nav_btn_selected);
+        }
+
+        //5
+        let titlePages = tdd.toc_list.filter((el) => el.type === "page");
+        // log('titlePages only = ', titlePages)
+        // log('tdd.activePage > ', tdd.activePage)
+
+
+        /*
+        -------------------------------------------------------------
+        -------------------------------------------------------------
+        */
+        // disable back nav on first page when titleCover preset is 0
+        let yyy = titlePages.indexOf(tdd.activePage)
+        log("titlePages indexOf tdd.activePage = ", yyy, ' ', tdd.titleCover)
+        // titlePages.indexOf(tdd.activePage) === 0
+        !tdd.titleCover && titlePages.indexOf(tdd.activePage) === 0
+          ? $btnPrev.setAttribute("disabled", "true")
+          : ""
+        /*
+        -------------------------------------------------------------
+        -------------------------------------------------------------
+        */
+
+
+        titlePages.indexOf(tdd.activePage) === titlePages.length - 1
+          ? $btnNext.setAttribute("disabled", "true")
+          : "";
+        // USE => .removeAttribute('disabled') to remove the attribute if needed
+
+        //6
+
+
+
+
+
+
+        df.appendChild($btnPrev);
+        df.appendChild($nOfPages);
+        df.appendChild($btnNext);
+
+        $pageNav.appendChild(df);
+
+        //7
+        return $pageNav;
+      },
+
+      // MAKE ACCORDION
+      makeAccordion(targetSelector, selectorSection) {
+        const $acc = document.querySelector(`#${targetSelector}`)
+        $acc.style.clip = 'unset'
+        $acc.style.height = '100%'
+        const $accs = $acc.querySelectorAll(selectorSection)
+        console.log("$acc = ", $acc)
+        console.log("$accs = ", $accs)
+        let df = new DocumentFragment()
+        // /*
+        // LOOP
+        for (let i = 0; i < $accs.length; i++) {
+          // create Elements
+          let accItem = document.createElement("div")
+          accItem.classList.add("accordion-item", "border-0")
+
+          let accBtn = document.createElement("button")
+          accBtn.type = "button"
+          accBtn.classList.add("accordion-button", "collapsed")
+
+          tdd.tmpAttArr = [accBtn]
+          tdd.tmpAttObj = {
+            "data-bs-toggle": "collapse",
+            "data-bs-target": `#${targetSelector}-collapse_${i}`,
+            "aria-expanded": false,
+            "aria-controls": `${targetSelector}-collapse_${i}`
+          }
+          tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+          tdd.lib.reset_loop_setAtts()
+
+          let accCollapse = document.createElement("div")
+          accCollapse.id = `${targetSelector}-collapse_${i}`
+          accCollapse.classList.add("accordion-collapse", "collapse")
+          accCollapse.setAttribute("data-bs-parent", `#${$acc.id}`)
+
+          let accHeader = $accs[i].querySelector("h2")
+          // accHeader.classList.add("accordion-header", "bg-success")
+          accHeader.classList.add("accordion-header")
+
+          accBtn.textContent = accHeader.textContent
+          accHeader.innerHTML = ""
+          accHeader.appendChild(accBtn)
+
+          accItem.appendChild(accHeader)
+
+          let accBody = $accs[i]
+          accBody.classList.add("accordion-body")
+
+          accCollapse.appendChild(accBody)
+          accItem.appendChild(accCollapse)
+
+          df.appendChild(accItem)
+
+          $acc.appendChild(df)
+          $acc.classList.add("accordion", "accordion-flush")
+          // $acc.classList.add("accordion")
+        }
+        console.log("$acc = ", $acc)
+        return $acc;
+        // */
+      },
+
+      // MAKE TABS
+      makeTabs(targetSelector, selectorSection) {
+
+        // const makeTabs = (targetSelector, selectorSection) => {
+        const $tab = document.querySelector(`#${targetSelector}`);
+        const $tabs = $tab.querySelectorAll(selectorSection);
+
+        $tab.classList.add("d-flex", "align-items-start");
+
+        let navTabs = document.createElement("div");
+        navTabs.classList.add(
+          "nav",
+          "col-5",
+          "flex-column",
+          "nav-pills",
+          "me-3",
+          "nav-fill",
+          "p-3"
+        );
+        navTabs.id = "v-pills-tab";
+        navTabs.role = "tablist";
+        navTabs.setAttribute("aria-orientation", "vertical");
+
+        let tabContent = document.createElement("div");
+        tabContent.id = "nav-tabContent";
+        tabContent.classList.add("tab-content");
+
+        let df = new DocumentFragment();
+
+        // LOOP
+        for (let i = 0; i < $tabs.length; i++) {
+          // create Elements
+          let tabBtn = document.createElement("button");
+          tabBtn.type = "button";
+          tabBtn.role = "tab";
+          // tabBtn.setAttribute("role", "tab");
+          tabBtn.id = `#${targetSelector}-tab_${i}`;
+
+          if (i === 0) {
+            tabBtn.classList.add(
+              "nav-link",
+              "active",
+              "text-start",
+              "nav-fill",
+              "p-3"
+            );
+            tabBtn.setAttribute("aria-selected", "true");
+          } else {
+            tabBtn.classList.add("nav-link", "text-start", "nav-fill", "p-3");
+            tabBtn.setAttribute("aria-selected", "false");
+          }
+
+          tdd.tmpAttArr = [tabBtn]
+          tdd.tmpAttObj = {
+            "data-bs-toggle": "tab",
+            "data-bs-target": `#${targetSelector}-tab_${i}`,
+            "aria-controls": `${targetSelector}-tab_${i}`
+          }
+          tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+          tdd.lib.reset_loop_setAtts()
+
+          // tabBtn.textContent = `tab ${i + 1}`;
+          tabBtn.textContent = $tabs[i].querySelector("h2").textContent;
+
+          navTabs.appendChild(tabBtn);
+
+          /*  */
+          //
+          /*  */
+
+          let tabPane = document.createElement("div");
+          tabPane.id = `${targetSelector}-tab_${i}`;
+          if (i === 0) {
+            tabPane.classList.add("tab-pane", "fade", "show", "active");
+          } else {
+            tabPane.classList.add("tab-pane", "fade");
+          }
+
+          tabPane.role = "tabpanel";
+          tabPane.setAttribute("aria-labelledby", `${targetSelector}-tab_${i}`);
+          tabPane.tabindex = 0;
+
+          tabPane.appendChild($tabs[i]);
+          tabContent.appendChild(tabPane);
+        }
+        // $nav.appendChild(navTabs);
+        // df.appendChild($nav);
+        df.appendChild(navTabs);
+        df.appendChild(tabContent);
+        $tab.appendChild(df);
+
+        // console.log($tab);
+        return $tab;
+        // }
+
+      },
+
+
+    },
+
+    /*
+    jumbo COMPONENTS  ------------------------------------------------------------------------
+    */
+    // () {
+
+    // },
+
+    /*
+    HEADER COMPONENTS  ------------------------------------------------------------------------
+    */
+    // () {
+
+    // },
+
+    /*
+    FOOTER COMPONENTS  ------------------------------------------------------------------------
+    */
+    // () {
+
+    // },
+
+    /*
+    DIALOG COMPONENTS  ------------------------------------------------------------------------
+    */
+    // () {
+
+    // },
+  },
+
+  //-----------------------------------------------------------------------------------------
+
+  /** 🟥  //  TOC methods  ============================= */
+  // 🟥 TOC methods
+  toc: {
+    // get toc data from DOM
+    init_toc() {
+      // find the selected page
+      tdd.activeLink = Array.from($src).find((el) => el.hasAttribute("selected")).value;
+      log('tdd.activeLink = ', tdd.activeLink)
+
+      //extract raw data
+      const raw_toc = this.extract($src);
+
+      // get 2 language titles
+      const titles = this.get_titles(raw_toc);
+
+      // Fill master toc list
+      if (titles.length != 0) {
+        tdd.toc_list = this.eval_toc(titles[0], titles[1]);
+
+        // call set storage and add the list content instead of blank
+        tdd.custom_title.list = [...tdd.toc_list];
+        tdd.App.setLocalData(tdd.courseCode, tdd.custom_title);
+        log('tdd.custom_title = ', tdd.custom_title)
+      }
+
+      // Define the current active page
+      // PS* Moved from init_toc
+      // log('toc list type => ', tdd.toc_list)
+
+      tdd.activePage = tdd.toc_list.find((el) => Object.keys(el).find((key) => el[key] === tdd.activeLink));
+      log("active page from within init_toc ======= ", tdd.activePage);
+
+      tdd.activeGlobal = tdd.activePage.global;
+      log("Global position for active page ======= ", tdd.activeGlobal);
+
+      table(["BEFORE MOVING FORWARD", "_____________________", "LANG = ", currentLanguage,]);
+
+      if (tdd.toc_list.length != 0) {
+        if (currentLanguage === "en" || currentLanguage === "fr") {
+          // Here to arrange for the local storage data
+
+          // generate navigation menu Accordion
+          // $toc = this.generate_toc();
+          $toc = tdd.toc.generate_toc();
+          log("$toc after generated => ", $toc);
+
+          // tdd.toc.conditional_toc($toc)
+          tdd.toc.conditional_toc();
+          log("$toc after custom => ", $toc);
+        } else if (currentLanguage === "title") {
+          $toc = currentLanguage;
+          tdd.ready.toc = true;
+        }
+      }
+
+      // log("$toc => ", $toc)
+      // return tdd.App.process_data($src)
+      tdd.ready.ui = true;
+      // log("tdd.ready.ui = > ", tdd.ready.ui)
+      // return tdd.App.process_data($toc)
+      tdd.App.process_data($toc);
+      log("process_data($toc) FINISHED and will return to init App fn");
+      return;
+    },
+
+    // extract data from DOM select option
+    extract(obj) {
+      let arr = [];
+
+      // Define obj Keys
+      let itemIndex,
+        itemRawText,
+        itemText,
+        itemLink,
+        itemSelected,
+        itemLevel,
+        itemType;
+
+      // // find the selected page
+      // let mm = Array.from(obj).find(el => el.hasAttribute('selected'))
+      // log('mm = ', mm)
+      // log('mm = ', mm.value)
+
+      // Fill the main array
+      Array.from(obj).forEach((item, index) => {
+        itemIndex = item.index;
+        itemRawText = item.innerHTML;
+        itemText = itemRawText.split("&nbsp;&nbsp;").join("");
+        itemLink = item.getAttribute("value");
+        itemSelected = item.getAttribute("selected");
+        itemType = "p";
+
+        // Get the current Page Index
+        itemSelected !== null ? (itemSelected = 1) : (itemSelected = 0);
+
+        // Mark the selected page
+        // itemSelected === 1 ? log('itemSelected = 1 ', itemLink) : ''
+        // itemSelected === 1 ? tdd.activeLink = itemLink : ''
+
+        // Get list item level
+        itemLevel = itemRawText.split("&nbsp;&nbsp;").length - 1;
+
+        // Set Type
+        // itemLevel === 3 || 4 || 5 || 6 || 7 ? itemType = 'p': ''
+        itemLevel === 2 ? (itemType = "module") : "";
+        itemLevel === 1 ? (itemType = "title") : "";
+        itemLevel === 0 ? (itemType = "unit") : "";
+
+        // Push obj to array
+        arr.push({
+          index: itemIndex,
+          en_name: itemText,
+          fr_name: "",
+          en_link: itemLink,
+          fr_link: "",
+          active: itemSelected,
+          level: itemLevel,
+          type: itemType,
+          module: "",
+          global: "",
+          local: "",
+        });
+      });
+      // log('activeLink = ', tdd.activeLink)
+
+      //remove Assignable unit from the beginning of the array
+      // arr.shift()
+
+      // arr[0].level === arr[1].level ? arr[0].type = 'cover' : ''
+
+      // arr[1].level === arr[2].level ? (arr[1].type = "cover") : "";
+      if (arr[1].level === arr[2].level) {
+        arr[1].type = "cover";
+        // arr[2].cover_link = arr[1].en_link
+        arr[2].title_link = arr[1].en_link;
+      }
+
+      // log('EXTRACTED arr = ', arr)
+
+      return arr;
+      // return arr, this.get_titles()
+    },
+
+    //get_titles
+    get_titles(raw_toc) {
+      // log('raw_toc = ', raw_toc)
+      let return_arr = [];
+
+      // // Filter the array and get the course code
+      // let cc = tdd.lib.filter_itemType(raw_toc, "unit")
+      // tdd.courseCode = raw_toc[cc].en_name
+      // log('tdd.code = ', tdd.courseCode)
+      // tdd.setLocalData('code', tdd.courseCode)
+
+      const filtered_titles = tdd.lib.filter_itemType(raw_toc, "title");
+      // log('filtered_titles = ', filtered_titles)
+
+      let isBilingual = "";
+      if (filtered_titles.length % 2 == 0) {
+        let checkName = raw_toc[filtered_titles.slice(-1)[0]].en_name;
+        // log('checkName = ', checkName)
+
+        // TRUE > Bilingual | No > POPUPS
+        // FALSE > Singular | Yes > POPUPS
+        checkName.toLowerCase() != "popups | do not alter"
+          ? (isBilingual = true)
+          : (isBilingual = false);
+      } else {
+        // TRUE > Bilingual | Yes > POPUPS
+        // FALSE > Singular | No > POPUPS
+        filtered_titles.length === 1
+          ? (isBilingual = false)
+          : (isBilingual = true);
+      }
+      // log('isBilingual => ', isBilingual)
+
+      //Prepare TOC based on current language
+      const en_toc = raw_toc.slice(filtered_titles[0], filtered_titles[1]);
+      const fr_toc = raw_toc.slice(filtered_titles[1], filtered_titles[2]);
+      const popup_toc = raw_toc.slice(filtered_titles[2], -1);
+
+      // log('en_toc = ', en_toc)
+      // log('fr_toc = ', fr_toc)
+      // log('popup_toc = ', popup_toc)
+
+      let mismatch = 0;
+      if (en_toc.length != fr_toc.length) {
+        tdd.errors.toc_mismatch_in_structure = `tdd.toc.get_titles error: Mismatch between EN ${en_toc.length} and FR ${fr_toc.length}`;
+
+        error(tdd.errors.toc_mismatch_in_structure);
+        alert(tdd.errors.toc_mismatch_in_structure);
+      } else {
+        for (let i = 0; i < en_toc.length; i++) {
+          if (en_toc[i].length != fr_toc[i].length) {
+            mismatch += 1;
+
+            tdd.errors.toc_mismatch_in_pages = `tdd.toc.get_titles error: ${mismatch} of mismatching(s) found at: " ${Object.keys({ en_toc })[0]
+              } " and " ${Object.keys({ fr_toc })[0]} " at index ${n} => ${en_toc[n].length
+              } and ${fr_toc[n].length}`;
+
+            error(tdd.errors.toc_mismatch);
+            alert(tdd.errors.toc_mismatch);
+          }
+        }
+
+        // mismatch === 0 ? this.eval_toc(en_toc, fr_toc) : ''
+        mismatch === 0 ? (return_arr = [en_toc, fr_toc]) : "";
+      }
+      return return_arr;
+    },
+
+    // CAN SET A HOOK TO SKIP FROM LOCAL STORAGE TILL HERE
+
+    // is bilingual
+    eval_toc(en_toc, fr_toc) {
+      let module_ndx = 0;
+
+      // define counters variables
+      let module_count, local_count, global_count;
+      module_count = local_count = global_count = 0;
+
+      // clone one of the arrays to alter
+      let toc_list = [...en_toc];
+      // log("toc_list = >>", toc_list)
+
+      // add list properties to title and modules
+      toc_list.filter((m, ndx, arr) => {
+        m.type === "title" ? (m.list = new Array()) : "";
+
+        if (m.type === "module") {
+          // fill list array of parent
+          arr[0].list.push(ndx);
+          m.list = new Array();
+        }
+      });
+
+      // will work on one instance lang to save processing
+      toc_list.forEach((item, index, arr) => {
+        item.index = index;
+
+        // combine EN and FR data into a unified list
+        item.fr_name = fr_toc[index].en_name;
+        item.fr_link = fr_toc[index].en_link;
+
+        // make sure the list has the active page
+        // if (currentLanguage === "en") {
+        //   item.active = fr_toc[index].active;
+        // } else if (currentLanguage === "fr") {
+        //   item.active = fr_toc[index].active;
+        // }
+        if (en_toc[index].active === 1 || fr_toc[index].active === 1) {
+          item.active = 1;
+          // log("active here = ", index)
+        }
+
+        if (item.type === "p") {
+          item.type = "page";
+          global_count++;
+          local_count++;
+
+          // fill pages obj properties
+          item.module = module_count;
+          item.global = global_count;
+          item.local = local_count;
+
+          // get the current module index for the first child page (the previous item is the module)
+          if (arr[index - 1].type === "module") {
+            // get pos of current module
+            module_ndx = index - 1;
+            // log('arr[module_ndx].module', arr[module_ndx].module)
+
+            // add first page position to parent module
+            arr[module_ndx].list.push(index);
+            // log(arrr[idx - 1])
+          } else {
+            // if page is not the first child of the module
+            if (item.module === arr[module_ndx].module) {
+              // add pages positions to their parent module
+              arr[module_ndx].list.push(index);
+              // log(index, ' module_ndx => ', module_ndx)
+            }
+          }
+        }
+
+        if (item.type === "module") {
+          // to fix the summary page properties
+          if (index === toc_list.length - 1) {
+            item.type = "page";
+            item.global = global_count + 1;
+            item.local = 0;
+
+            // remove the summary from modules list
+            arr[0].list.pop();
+
+            // delete un-needed properties
+            // delete item.local
+            delete item.module;
+            delete item.list;
+          } else {
+            // reset local page counter and increment the other ones
+            local_count = 0;
+            module_count++;
+            item.module = module_count;
+
+            // delete un-needed properties
+            delete item.active;
+            delete item.en_link;
+            delete item.fr_link;
+            delete item.global;
+            delete item.local;
+          }
+        }
+
+        if (item.type === "title") {
+          // delete un-needed properties
+
+          // commented for the activeLink
+          delete item.en_link;
+          delete item.fr_link;
+          delete item.module;
+          delete item.global;
+          delete item.local;
+          delete item.level;
+          delete item.index;
+          delete item.active;
+
+          // Remove the Starting [EN | ] and [FR | ] from modules names @ Saba Publisher
+          item.en_name = item.en_name.slice(5);
+          item.fr_name = item.fr_name.slice(5);
+        }
+        // delete un-needed properties
+        delete item.index;
+        delete item.level;
+      });
+
+      log("toc_list from within eval toc = ", toc_list);
+
+      return toc_list;
+    },
+
+    // CONDITIONAL TOC : Called after TOC is generated to apply custom title parameters
+    conditional_toc() {
+      if (tdd.custom_title.linear === false && tdd.custom_title.skip === true) {
+        if (tdd.custom_title.modules[0] != 0) {
+          let $tar = $toc.children[tdd.custom_title.modules[0] - 1];
+          $toc.removeChild($tar);
+          // log('$toc after alter => ', $toc)
+        }
+      }
+      return $toc;
+    },
+
+    // Build TOC
+    generate_toc() {
+      // Create virtual container to contain the generated elements
+      tdd.$toc_df = new DocumentFragment();
+
+      // Define the array to be used
+      myArr = [...tdd.toc_list];
+
+      // // Create the main accordion container
+      const $accordion = document.createElement("div");
+      $accordion.id = "accordion";
+      $accordion.classList.add(`accordion`);
+
+      // Loop TOC list
+      tdd.toc.generate_modules($accordion);
+
+      let tableOfContentTitle = document.createElement('h5')
+      tableOfContentTitle.id = 'Table of Content Title'
+      tableOfContentTitle.classList.add('text-secondary', 'ps-1')
+      tableOfContentTitle.textContent = tdd.dictionary.labels.toc.title[currentLanguage];
+      $accordion.appendChild(tableOfContentTitle);
+
+      // Append generated elements to accordion
+      $accordion.appendChild(tdd.$toc_df);
+
+      // Mark TOC as completed
+      tdd.ready.toc = true;
+
+      return $accordion;
+    },
+
+    // Build TOC Modules
+    generate_modules($accordion) {
+      let $item,
+        $header,
+        $button,
+        $buttonSpan,
+        $collapse,
+        $accordionBody,
+        $listGroup,
+        $listItem,
+        $lastListItem,
+        module_counter,
+        counter;
+
+      // Reset Module counter
+      module_counter = 0;
+
+      // Loop accross array content
+      myArr.forEach((el, idx, arr) => {
+        // Module type
+        if (el.type === "module") {
+          module_counter += 1;
+
+          $item = document.createElement("div");
+
+          $item.id = `item${module_counter}`;
+
+          // $item.classList.add("accordion-item");
+          $item.classList.add("accordion-item", 'border-0');
+
+          // $header = document.createElement("h2");
+          $header = document.createElement("h3");
+
+          // $header.id = `heading${idx}`;
+          $header.id = `heading${module_counter}`;
+
+          // $header.classList.add("accordion-header");
+          $header.classList.add(
+            "accordion-header",
+            // "list-group-item",
+            // "list-group-item-action"
+          );
+
+          $button = document.createElement("button");
+          //20240522
+          $button.classList.add(
+            "accordion-button",
+            "collapsed",
+            "d-flex",
+            "mt-3",
+            "justify-content-between",
+            "align-items-start",
+            "bg-secondary",
+            // "bg-dark",
+            // "text-light",
+            "border-0",
+
+          );
+          $button.textContent = el[`${currentLanguage}_name`];
+
+          tdd.tmpAttArr = [$button]
+          tdd.tmpAttObj = {
+            "type": "button",
+            "data-bs-toggle": "collapse",
+            "data-bs-target": `#collapse${module_counter}`,
+            "aria-expanded": false,
+            "aria-controls": `collapse${module_counter}`
+          }
+          tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+          tdd.lib.reset_loop_setAtts()
+
+          $buttonSpan = document.createElement("span");
+          $buttonSpan.classList.add(
+            "badge",
+            "bg-primary",
+            "badge-pill",
+            "ms-auto",
+            "flex-shrink-1"
+          );
+
+          $collapse = document.createElement("div");
+
+          // $collapse.id = `collapse${idx}`;
+          $collapse.id = `collapse${module_counter}`;
+
+          //20240522
+          $collapse.classList.add("accordion-collapse", "collapse", "d-shadow");
+
+          $collapse.setAttribute("aria-labelledby", `heading${module_counter}`);
+          $collapse.setAttribute("data-bs-parent", `#${$accordion.id}`);
+
+          $accordionBody = document.createElement("div");
+          $accordionBody.classList.add("accordion-body", "p-0");
+
+          $listGroup = document.createElement("div");
+          //20240522
+          $listGroup.classList.add("list-group", "list-group-flush");
+
+          counter = 0;
+
+          // LOOP
+          // call generate pages
+          tdd.toc.generate_pages(
+            el,
+            arr,
+            $listItem,
+            $collapse,
+            $accordionBody,
+            $listGroup,
+            counter,
+            $button,
+            $buttonSpan
+          );
+
+          $collapse.appendChild($accordionBody);
+
+          // $button.appendChild($buttonSpan)
+          $header.appendChild($button);
+          $item.appendChild($header);
+          $item.appendChild($collapse);
+
+          tdd.$toc_df.appendChild($item);
+        } else if (el.type === "page" && el.local === 0) {
+          // call generate last page
+          $listGroup = tdd.toc.generate_last_page(
+            el,
+            arr,
+            $listGroup,
+            $lastListItem
+          );
+
+          // Append to the main virtual list
+          tdd.$toc_df.appendChild($listGroup);
+        }
+      });
+      return $accordion;
+    },
+
+    // BUILD TOC PAGES
+    generate_pages(
+      el,
+      arr,
+      $listItem,
+      $collapse,
+      $accordionBody,
+      $listGroup,
+      counter,
+      $button,
+      $buttonSpan
+    ) {
+      // Loop across pages within the module
+      el.list.forEach((a, i, rr) => {
+        $listItem = document.createElement("a")
+        $listItem.classList.add(
+          "list-group-item",
+          "list-group-item-action",
+          // "rounded-0",
+          'border-0',
+          'd-flex',
+          'gap-2',
+          // 'bg-info',
+        );
+
+        $listItem.setAttribute("data-global", arr[a].global);
+        $listItem.style.cursor = "pointer"
+        if (arr[a].active === 1) {
+          if (arr[a].local != 0) {
+            tdd.course.title = arr[0]
+            tdd.course.module = el
+            tdd.course.page = arr[a]
+          }
+          $listItem.setAttribute("aria-current", true);
+          $listItem.setAttribute(onclick, "return false;")
+
+          // $listItem.classList.toggle("list-group-item-success")
+          $listItem.classList.toggle("active")
+
+          $button.setAttribute("aria-expanded", true)
+
+          //20240522
+          $button.classList.toggle("collapsed")
+          $collapse.classList.toggle("show")
+        }
+
+        $listItem.textContent = arr[a][`${currentLanguage}_name`]
+
+        //LINK
+        tdd.tmpAttArr = [$listItem]
+        tdd.tmpAttObj = {
+          "href": "#",
+          "data-en": arr[a].en_link,
+          "data-fr": arr[a].fr_link
+        }
+        tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+        tdd.lib.reset_loop_setAtts()
+
+        $listItem.addEventListener("click", tdd.App.link_selected)
+
+        $listGroup.appendChild($listItem)
+        $accordionBody.appendChild($listGroup)
+
+        counter++
+        $buttonSpan.textContent = counter
+      })
+      return
+    },
+
+    // BUILD TOC LAST PAGE (not a module child)
+    generate_last_page(el, arr, $listGroup, $lastListItem) {
+      $listGroup = document.createElement("div")
+      //20240522
+      $listGroup.classList.add("list-group", "list-group-flush")
+
+      $lastListItem = document.createElement("a")
+      //20240522
+      $lastListItem.classList.add(
+        "list-group-item",
+        "list-group-item-action",
+        "rounded-0"
+      )
+      $lastListItem.textContent = el[`${currentLanguage}_name`]
+
+      tdd.tmpAttArr = [$lastListItem]
+      tdd.tmpAttObj = {
+        "href": "#",
+        "data-en": el.en_link,
+        "data-fr": el.fr_link,
+        "data-global": el.global,
+      }
+      tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+      tdd.lib.reset_loop_setAtts()
+
+      if (el.active === 1) {
+        if (el.local === 0) {
+          tdd.course.title = arr[0]
+          tdd.course.module = tdd.course.title
+          tdd.course.page = el
+        }
+
+        $lastListItem.setAttribute("aria-current", true)
+
+        // $lastListItem.classList.toggle("list-group-item-success")
+        $lastListItem.classList.toggle("active")
+      }
+
+      $lastListItem.addEventListener("click", tdd.App.link_selected)
+      $listGroup.appendChild($lastListItem)
+      return $listGroup
+    },
+  },
+
+  //-----------------------------------------------------------------------------------------
+
+  //-----------------------------------------------------------------------------------------
+
+
+
+
+  //-----------------------------------------------------------------------------------------
+
+  //-----------------------------------------------------------------------------------------
+
+  /** 🟥  //  BootStrap comps methods  ============================= */
+  // 🟥 DIALOG
+  dialog: {
+
+    /* 
+    =========================================================================================================
+    */
+
+    //----------------------------------------------------------
+    // INIT modal structure
+    init_modal() {
+      let modal = document.createElement("div")
+      modal.id = "modal"
+      modal.className = "modal fade"
+
+      tdd.tmpAttArr = [modal]
+      tdd.tmpAttObj = {
+        "tabindex": "-1",
+        "data-bs-backdrop": "static",
+        "data-labelledby": ".modal",
+        "data-describedby": ".modal",
+        "aria-hidden": "true"
+      }
+      tdd.lib.loop_setAtts(tdd.tmpAttArr, tdd.tmpAttObj)
+      tdd.lib.reset_loop_setAtts()
+
+      modal.innerHTML = `<div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content shadow bg-white">
+                    <div class="modal-header justify-content-center border-0">
+                      <h5 class="modal-title fs-5" id="modalLabel"></h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!--
+                    <div class="modal-body text-center"></div>
+                    -->
+                    <div class="modal-body"></div>
+                    <div class="modal-footer justify-content-center border-0"></div>
+                  </div>
+                </div>`
+      return modal
+    },
+
+    /*
+    --------------------------------------------------------
+    */
+
+    // Check the style of the desired modal (Only close btn, close and 1 dismiss, close and 2 dismiss)
+    check_modal_cat() {
+      if ($modal_extract.cat === "0") {
+        //fontawesom
+        // $modal_data.icon = `<i class="fa fa-2x fa-info-circle" aria-hidden="true"></i>`
+        $modal_data.icon = `<i class="bi-alarm" style="font-size: 2rem; color: cornflowerblue;"></i>`
+
+        $modal_data.head = ""
+        $modal_data.controls = ""
+      } else if ($modal_extract.cat === "1") {
+        //fontawesom
+        // $modal_data.icon = '<i class="fa fa-2x fa-info-circle" aria-hidden="true"></i>'
+        $modal_data.icon =
+          '<i class="bi-alarm" style="font-size: 2rem; color: cornflowerblue;"></i>'
+
+        $modal_data.controls = `
+          <button 
+            class='btn btn-dark'
+            type="button"
+            data-bs-dismiss="modal"
+            data-d-resp="ok"
+            data-d-parent=${$modal_extract.obj}
+            >
+            ${dialog_data[`${$modal_extract.obj}`].ok}
+            </button>
+            `;
+      } else if ($modal_extract.cat === "2") {
+        $modal_data.head = ""
+        $modal_data.controls = `
+            <button
+            class='btn btn-dark'
+            type="button"
+            data-bs-dismiss="modal"
+            data-d-resp="yes"
+            data-d-parent=${$modal_extract.obj}
+            >
+            ${dialog_data[`${$modal_extract.obj}`].yes}
+            </button>
+            <button
+            class='btn btn-dark'
+            type="button"
+            data-bs-dismiss="modal"
+            data-d-resp="no"
+            data-d-parent=${$modal_extract.obj}
+            >
+              ${dialog_data[`${$modal_extract.obj}`].no}
+          </button>
+        `
+      }
+      return
+    },
+
+    generate_modal_data(selectedBtn) {
+      // log('HERE AHMED 20240423')
+      // log(
+      //   "CARRY OVER = getAttribute data-title ",
+      //   selectedBtn.getAttribute("data-title")
+      // )
+      // Extract info from data-bs-* attributes
+      $modal_extract = {
+        obj: selectedBtn.getAttribute("data-d-obj"),
+        cat: selectedBtn.getAttribute("data-d-cat"),
+        htm: selectedBtn.getAttribute("data-d-htm"),
+        fnCall: selectedBtn.getAttribute("data-d-fncall"),
+      }
+
+      // modal parts to update dynamically
+      $modal_parts = {
+        title: $modal.querySelector(".modal-title"),
+        body: $modal.querySelector(".modal-body"),
+        footer: $modal.querySelector(".modal-footer"),
+      }
+
+      // Update the modal's content.
+      $modal_data = {
+        icon: "",
+        head: "",
+        body: dialog_data[`${$modal_extract.obj}`].msg,
+        controls: [],
+        callbacks: [],
+      }
+
+      // If No Head Present in Data Source
+      dialog_data[`${$modal_extract.obj}`].head
+        ? ($modal_data.head = dialog_data[`${$modal_extract.obj}`].head)
+        : ""
+
+      tdd.dialog.check_modal_cat()
+      return tdd.dialog.update_modal($modal_data, $modal_parts)
+    },
+
+    // $modal.addEventListener('show.bs.modal', event => {})
+
+
+    // add Event listeners
+    dialog_events(e) {
+      // Default for now, however it is named as a callback function in the button attributes [data-d-fncall]
+      let lang = e.target.getAttribute("data-d-parent")
+      let resp = e.target.getAttribute("data-d-resp")
+
+      // log("lang : > resp = ", lang, resp)
+      // log("NEXT PAGE => ", tdd.nextPage[`${lang}_link`])
+
+      if (tdd.custom_title.linear === false && currentLanguage === "title") {
+        resp === "yes" ? (tdd.custom_title.skip = false) : ""
+        resp === "no" ? (tdd.custom_title.skip = true) : ""
+
+        currentLanguage = lang
+        tdd.custom_title.lang = currentLanguage;
+        tdd.App.setLocalData(tdd.courseCode, tdd.custom_title)
+      }
+
+      // log("current lang = ", currentLanguage, tdd.custom_title.lang)
+      // trivExitPage(flag, true)
+      // log("tdd.nextPage[`${lang}_link`] = > ", tdd.nextPage[`${lang}_link`])
+      trivExitPage(tdd.nextPage[`${lang}_link`], true)
+    },
+
+    // add Event listeners
+    modal_controls() {
+      $modal.addEventListener("hide.bs.modal", (event) => { })
+
+      // log("TEST CALLBACK FN => ", $modal_extract.fnCall);
+      if ($modal_extract.cat === "2") {
+        let $btnYes = $modal.querySelector('[data-d-resp="yes"]')
+
+        // $btnYes.addEventListener('click', tdd.dialog.dialog_events)
+        $btnYes.addEventListener("click", tdd.dialog[$modal_extract.fnCall])
+
+        let $btnNo = $modal.querySelector('[data-d-resp="no"]')
+
+        // $btnNo.addEventListener('click', tdd.dialog.dialog_events)
+        $btnNo.addEventListener("click", tdd.dialog[$modal_extract.fnCall]);
+      } else if ($modal_extract.cat === "1") {
+        let $btnOk = $modal.querySelector('[data-d-resp="ok"]')
+
+        // $btnOk.addEventListener('click', tdd.dialog.dialog_events)
+        $btnOk.addEventListener("click", tdd.dialog[$modal_extract.fnCall])
+      }
+      return
+    },
+
+    // modal parts filled dynamically
+    update_modal(obj, $modal_parts) {
+      // $modal_parts.title.innerHTML = `${obj.icon} ${obj.head}`
+      $modal_parts.title.innerHTML = obj.icon + obj.head
+
+      $modal_extract.htm === "true"
+        ? ($modal_parts.body.innerHTML = `${obj.body}`)
+        : ($modal_parts.body.textContent = htmlToTxt(`${obj.body}`))
+
+      // $modal_parts.footer.innerHTML = `${obj.controls}`
+      $modal_parts.footer.innerHTML = obj.controls
+
+      tdd.dialog.modal_controls()
+      return
+    },
+
+    // Get the selected source button
+    select_modal(e) {
+      let selectedBtn = e.target
+      // log('selectedBtn = ', selectedBtn)
+
+      // log('tdd.custom_cover => ', tdd.custom_cover)
+      // log("selectedBtn = ", selectedBtn.getAttribute("data-title"))
+      // log('HERE AHMED 20240423')
+      tdd.dialog.generate_modal_data(selectedBtn)
+    },
+
+    /* 
+    =========================================================================================================
+    */
+  },
+
+  //-----------------------------------------------------------------------------------------
+};
+
+//-----------------------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------------------
+
+//3 PRELOADER
+tdd.$preloader = document.createElement("div")
+tdd.$preloader.id = "preloader"
+$body.prepend(tdd.$preloader)
+
+//-----------------------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------------------
+
+// let logo = document.createElement("img")
+// logo.src = "./assets/img/tdd.png";
+// logo.width = "200";
+// logo.height = "100";
+// logo.id = "logo";
+// tdd.$preloader_cont.appendChild(logo)
+
+//4
+window.addEventListener("load", () => {
+  tdd.$preloader.classList.add("preloader-hidden")
+  tdd.$preloader.addEventListener("transitionend", () => {
+    $body.removeChild(tdd.$preloader)
+  })
+  $body.classList.remove("hidden")
+  // $body.classList.add("fadeIn")
+  $body.classList.add("fade", "show")
+})
+
+//-----------------------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------------------
+
+//5
+// window.addEventListener("DOMContentLoaded", tdd.App.init)
+// window.addEventListener("DOMContentLoaded", tdd.App.getLocalData)
+
+/*  --------------------------------------------------------------
+✅ APP STARTS FROM HERE
+--------------------------------------------------------------  */
+window.addEventListener("DOMContentLoaded", tdd.App.init_app)
