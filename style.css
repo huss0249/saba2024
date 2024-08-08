@@ -1,5 +1,7 @@
-div {
-  background: cyan!important;
-  color: orangered!important;
-  font-size: 64rem;
+h1 {
+  background: #ccc;
+  color: orangered;
+  font-size: 48rem;
+  font-family: "Segoe UI", sans-serif;
+  padding: 2rem;
 }
