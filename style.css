@@ -1,5 +1,5 @@
 div {
-  background: cyan;
+  background: cyan!important;
   color: green!important;
   font-size: 64rem;
 }
