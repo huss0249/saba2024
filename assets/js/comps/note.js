@@ -1,8 +1,11 @@
 const template = document.createElement('template');
 template.innerHTML = `
   <style>
-    @import url("./assets/css/lib/bootstrap.min.css");
-    @import url("./assets/css/lib/icons/bootstrap-icons.css");
+  // https://cdn.jsdelivr.net/gh/huss0249/saba2024@latest/
+    // @import url("./assets/css/lib/bootstrap.min.css");
+    // @import url("./assets/css/lib/icons/bootstrap-icons.css");
+    @import url("https://cdn.jsdelivr.net/gh/huss0249/saba2024@latest/assets/css/lib/bootstrap.min.css");
+    @import url("https://cdn.jsdelivr.net/gh/huss0249/saba2024@latest/assets/css/lib/icons/bootstrap-icons.css");
     // @import url("./app2023.css");
 
     .note {
