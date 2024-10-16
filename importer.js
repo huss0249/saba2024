@@ -4,8 +4,8 @@
 
 
 
-import "./assets/js/comps/footer.js";
-import "./assets/js/comps/page.js";
+// import "./assets/js/comps/footer.js";
+// import "./assets/js/comps/page.js";
 
 import "./assets/js/comps/hero.js";
 import "./assets/js/comps/image.js";

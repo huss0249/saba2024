@@ -251,6 +251,8 @@ w3.includeHTML = function(cb) {
     }
   }
   if (cb) cb();
+  // console.log(cb);
+  // console.log(this);
 };
 w3.getHttpData = function (file, func) {
   w3.http(file, function () {
