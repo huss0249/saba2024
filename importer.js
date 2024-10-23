@@ -29,6 +29,7 @@ import "./assets/js/comps/interactionD.js";
 */
 
 import "./assets/js/comps/exTab.js";
+import "./assets/js/comps/_interactive.js";
 // import "./assets/js/comps/exPill.js";
 // import "./assets/js/comps/exHorizontal.js";
 // import "./imgs.js";

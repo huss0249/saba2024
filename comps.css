@@ -1,0 +1,239 @@
+@import url("./assets/css/lib/bootstrap.min.css");
+@import url("./assets/css/lib/icons/bootstrap-icons.css");
+@import url("./assets/css/lib/animate.min.css");
+@import url("./assets/css/_scrollbar.css");
+
+/* ================================ */
+/* GLOBAL STYLES */
+/* ================================ */
+.d-shadow {
+	/* box-shadow: 5px 5px 20px rgba(0, 0, 100, 0.25), */
+				/* -10px -20px 20px rgba(100, 100, 0, 0.1) !important; */
+
+	box-shadow: rgba(0, 100, 210, 0.15) 0px 10px 25px -5px,
+				rgba(0, 200, 250, 0.25) 0px 10px 15px -10px !important;
+}
+
+
+
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* WEB COMPONENTS STYLES */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ACCORDION WEB COMPONENTS STYLES - Affects TOC as well*/
+  
+  /*
+  body {}
+*/
+
+  .accordion-item {
+	background: transparent !important;
+  }
+  
+  /*
+  .accordion-collapse {
+  }
+  */
+  
+  .accordion-button:is(.collapsed) {
+	background: var(--bs-info) !important;
+  }
+  
+  .accordion-button:not(.collapsed) {
+	background: var(--bs-info) !important;
+	/* color: white !important; */
+	color: rgb(33, 37, 41) !important;
+  }
+  .accordion-body {
+	background: white !important;
+  }
+  
+  .accordion-button {
+	/* border-radius: 0.5rem !important; */
+	border-radius: 0 !important;
+  }
+  
+  /*
+  .accordion-button::after {
+	filter: invert(75%);
+	}
+*/
+  /* ============================================================================================================== */
+  /* ============================================================================================================== */
+  /* END WEB COMPONENTS STYLES */
+  /* ============================================================================================================== */
+  /* ============================================================================================================== */
+
+  
+/* TABLESS */
+
+.exquiz {
+	/* background: greenyellow; */
+	margin-bottom: 2rem;
+	border-radius: 5px;
+	scrollbar-gutter: stable;
+	height: 720px;
+	max-height: 720px;
+	/* margin: 0; */
+	/* padding: 0; */
+
+
+	/* padding: 3rem 0; */
+	/*
+	margin: 3rem 0;
+	box-shadow: 0px 10px 10px 5px rgba(0, 0, 0, 0.35);
+	box-shadow: rgba(0, 100, 210, 0.15) 0px 10px 25px -5px, rgba(0, 200, 250, 0.25) 0px 10px 15px -10px !important;
+	overflow: hidden;
+	overflow-y: auto;
+	*/
+}
+
+
+:host(tdd-exquiz) {
+	/* display: block; */
+	background: green !important;
+	box-shadow: 0px 10px 10px 5px rgba(0, 0, 0, 0.35);
+	box-shadow: rgba(0, 100, 210, 0.15) 0px 10px 25px -5px, rgba(0, 200, 250, 0.25) 0px 10px 15px -10px !important;
+	border-radius: 5px;
+	/* overflow: hidden; */
+	overflow-y: scroll;
+	scrollbar-gutter: stable;
+	/* padding: 3rem 0; */
+	/* margin: 2rem 0; */
+}
+
+/*
+::slotted(div) {
+	border: solid thin green !important;
+}
+*/
+
+/*
+.slotted-content {
+	height: 500px;
+	max-height: 720px;
+	background: red;
+		overflow: hidden;
+		overflow-y: scroll;
+		border-radius: 5px;
+		margin: 20px;
+}
+*/
+
+/* 
+.tab-content {
+	min-height: 600px !important;
+	background: yellow !important;
+
+	
+    overflow: hidden !important;
+    overflow-y: scroll !important; 
+}
+*/
+/* END TABLESS */
+
+
+
+
+
+  /* ==============================================
+  TAB SLIDER
+  ============================================== */
+
+#nav-controls {
+	background: transparent;
+}
+
+.nav-link {
+	background: #ccc !important;
+	border: none;  
+	width: 1.5rem !important;
+	height: .35rem !important;
+	margin: auto 0 !important;
+	border-radius: 3px !important;
+}
+
+.nav-link.active {
+	/* margin: auto 0 !important; */
+	background: #aaa !important;
+	/* border: none !important;
+	width: 10px !important;
+	height: 5px !important; */
+}
+.nav-link:hover {
+	background: #aaa !important;
+	/* border: none !important;
+	width: 10px !important;
+	height: 5px !important; */
+}
+
+.nav-btn {
+	width: 44px !important;
+	/* aspect-ratio: 1 / 1 !important; */
+	font-size: 2rem;
+	text-align: center;
+	border: solid thin transparent;
+	background: transparent;
+	/* padding: 0 1rem 0 0 !important; */
+}
+.nav-btn.active {
+	background: transparent;
+	border: solid thin transparent;
+}
+
+/* ==============================================
+IMG
+============================================== */
+
+:host(tdd-img) {
+	--hero-clip: polygon(
+        0 0,
+        100% 0,
+        100% 600px,
+        50% 640px,
+        0 600px
+        );
+        --shadow: 0rem 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.hero {
+	filter: drop-shadow(0rem 0.5rem 1rem rgba(0, 0, 0, 0.15));
+  }
+  
+  .hero-img img {
+	clip-path: polygon(
+	  0 0,
+	  100% 0,
+	  100% 600px,
+	  50% 640px,
+	  0 600px
+	  ) !important;
+	  min-width: 100%;
+	  width: 1265px;
+	  min-height: 100%;
+	  max-height: 680px;
+	object-fit: cover !important;
+	object-position: top center !important;
+  }
+  
+  .hero-img::after {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100% !important;
+	height: 600px !important;
+	overflow: hidden !important;
+	z-index: 999;
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0.75) 15%, rgba(0, 0, 0, 0) 40%) !important;
+	filter: hue-rotate(90deg) !important;
+	clip-path: polygon(
+	  0 0,
+	  100% 0,
+	  100% 600px,
+	  50% 640px,
+	  0 600px
+	  ) !important;
+  }
